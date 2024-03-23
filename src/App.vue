@@ -1,13 +1,12 @@
 <template>
   <div id="app">
-    <EmpView></EmpView>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import EmpView from "./views/tlias/EmpView.vue";
 export default {
-  components: { EmpView },
+  components: {},
   data() {
     return {
       message: "Hello World",
