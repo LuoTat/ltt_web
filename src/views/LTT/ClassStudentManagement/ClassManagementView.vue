@@ -103,7 +103,7 @@
                         </el-form>
                         <div slot="footer" class="dialog-footer">
                             <el-button @click="addClassDialogVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="addClassDataUpdata()">确 定</el-button>
+                            <el-button type="primary" @click="addClassDataUpdate()">确 定</el-button>
                         </div>
                     </el-dialog>
 
@@ -132,7 +132,7 @@
                         </el-form>
                         <div slot="footer" class="dialog-footer">
                             <el-button @click="editClassDialogVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="editClassDataUpdata()">确 定</el-button>
+                            <el-button type="primary" @click="editClassDataUpdate()">确 定</el-button>
                         </div>
                     </el-dialog>
 
@@ -141,7 +141,7 @@
                         <span>您确定要删除该班级吗？</span>
                         <span slot="footer" class="dialog-footer">
                             <el-button @click="delClassDialogVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="delClassDataUpdata()">确 定</el-button>
+                            <el-button type="primary" @click="delClassDataUpdate()">确 定</el-button>
                         </span>
                     </el-dialog>
                 </el-main>
@@ -233,7 +233,7 @@ export default {
             this.editClassForm = { ...this.classData[index - 1] };
             this.editClassDialogVisible = true;
         },
-        addClassDataUpdata() {
+        addClassDataUpdate() {
             this.addClassForm.index = this.SQLData.length + 1;
             this.SQLData.push({ ...this.addClassForm }); //模拟更新数据库
             this.classData.push({ ...this.addClassForm }); //更新表格数据
@@ -241,7 +241,7 @@ export default {
             // 关闭编辑对话框
             this.addClassDialogVisible = false;
         },
-        editClassDataUpdata() {
+        editClassDataUpdate() {
             const index = this.editClassForm.index;
             this.SQLData[index - 1] = { ...this.editClassForm }; //模拟更新数据库
             this.classData[index - 1] = { ...this.editClassForm }; //更新表格数据
@@ -249,7 +249,7 @@ export default {
             // 关闭编辑对话框
             this.editClassDialogVisible = false;
         },
-        delClassDataUpdata() {
+        delClassDataUpdate() {
             // 关闭删除对话框
             this.delClassDialogVisible = false;
         },
