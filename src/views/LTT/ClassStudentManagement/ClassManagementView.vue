@@ -1,8 +1,12 @@
 <template>
-    <div>
-        <el-container style="height: 700px; border: 1px solid #eee">
+    <div style="text-align: center">
+        <el-container style="border: 1px, solid, #eee">
             <!-- 标题位置，加按钮 -->
-            <el-header style="font-size: 40px; background-color: rgb(238, 241, 246)">LTT管理系统</el-header>
+            <el-header style="font-size: 40px; background-color: rgb(238, 241, 246)">
+                LTT管理系统
+                <el-button type="primary" @click="editPasswd()">修改密码</el-button>
+                <el-button type="primary" @click="logOut()">退出登录</el-button>
+            </el-header>
 
             <el-container>
                 <!-- 侧边栏 -->
@@ -10,11 +14,9 @@
                     <el-menu :default-openeds="['1', '3']">
                         <el-submenu index="1">
                             <template slot="title"><i class="el-icon-message"></i>班级学员管理</template>
-                            <el-menu-item index="1-1">
-                                <router-link to="/ClassManagement">班级管理</router-link>
-                            </el-menu-item>
+                            <el-menu-item index="/ClassStudentManagement/StudentManagement">班级管理 </el-menu-item>
                             <el-menu-item index="1-2">
-                                <router-link to="/StudentManagement">学员管理</router-link>
+                                <router-link to="/ClassStudentManagement/StudentManagement">学员管理</router-link>
                             </el-menu-item>
                         </el-submenu>
                         <el-submenu index="2">
@@ -37,113 +39,7 @@
 
                 <!-- 右侧主界面 -->
                 <el-main>
-                    <!-- 查询栏 -->
-                    <el-form :inline="true" :model="searchForm" class="demo-form-inline">
-                        <el-form-item label="班级名称">
-                            <el-input v-model="searchForm.name" placeholder="请输入班级名称"></el-input>
-                        </el-form-item>
-
-                        <el-form-item label="结课时间">
-                            <el-date-picker v-model="searchForm.entrydate" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"> </el-date-picker>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" @click="searchClass">查询</el-button>
-                        </el-form-item>
-                    </el-form>
-
-                    <!-- 新增班级按钮 -->
-                    <el-button type="primary" @click="addClassDialogVisible = true">+新增班级</el-button>
-
-                    <!-- 表格 -->
-                    <el-table :data="showData">
-                        <el-table-column type="index" :index="indexMethod()" label="Index" width="80"> </el-table-column>
-                        <el-table-column prop="className" label="班级名称" width="100"> </el-table-column>
-                        <el-table-column prop="classRoom" label="班级教室" width="100"> </el-table-column>
-                        <el-table-column prop="openTime" label="开课时间" width="180"> </el-table-column>
-                        <el-table-column prop="closeTime" label="结课时间" width="180"> </el-table-column>
-                        <el-table-column prop="classTeacher" label="班主任" width="100"> </el-table-column>
-                        <el-table-column label="操作">
-                            <template slot-scope="scope">
-                                <!-- 编辑班级按钮 -->
-                                <el-button type="primary" @click="showEditClassDialog(scope.row.index)" size="mini">编辑</el-button>
-
-                                <!-- 删除班级按钮 -->
-                                <el-button type="danger" @click="delClassDialogVisible = true" size="mini">删除</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-
-                    <!-- 表格导航栏 -->
-                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="total" background layout="sizes,prev,pager,next,jumper,total"> </el-pagination>
-
-                    <!-- 下面是当前页面所有的对话框 -->
-
-                    <!-- 新增班级按钮的内容 -->
-                    <el-dialog title="新增班级" :visible.sync="addClassDialogVisible">
-                        <el-form :model="addClassForm">
-                            <el-form-item label="班级名称" label-position="left" :label-width="formLabelWidth">
-                                <el-input v-model="addClassForm.className" placeholder="请输入班级名称"></el-input>
-                            </el-form-item>
-                            <el-form-item label="班级教室" label-position="left" :label-width="formLabelWidth">
-                                <el-input v-model="addClassForm.classRoom" placeholder="请填写班级教室"> </el-input>
-                            </el-form-item>
-                            <el-form-item label="开课时间" label-position="left" :label-width="formLabelWidth">
-                                <el-date-picker v-model="addClassForm.openTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择开课时间"> </el-date-picker>
-                            </el-form-item>
-                            <el-form-item label="结课时间" label-position="left" :label-width="formLabelWidth">
-                                <el-date-picker v-model="addClassForm.closeTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择结课时间"> </el-date-picker>
-                            </el-form-item>
-                            <el-form-item label="班主任" label-position="left" :label-width="formLabelWidth">
-                                <el-select v-model="addClassForm.classTeacher" placeholder="请选择">
-                                    <el-option label="班主任1" value="班主任1"></el-option>
-                                    <el-option label="班主任2" value="班主任2"></el-option>
-                                    <el-option label="班主任3" value="班主任3"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-form>
-                        <div slot="footer" class="dialog-footer">
-                            <el-button @click="addClassDialogVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="addClassDataUpdate()">确 定</el-button>
-                        </div>
-                    </el-dialog>
-
-                    <!-- 编辑班级按钮的内容 -->
-                    <el-dialog title="编辑班级" :visible.sync="editClassDialogVisible">
-                        <el-form :model="editClassForm">
-                            <el-form-item label="班级名称" label-position="left" :label-width="formLabelWidth">
-                                <el-input v-model="editClassForm.className" placeholder="请输入班级名称"></el-input>
-                            </el-form-item>
-                            <el-form-item label="班级教室" label-position="left" :label-width="formLabelWidth">
-                                <el-input v-model="editClassForm.classRoom" placeholder="请填写班级教室"> </el-input>
-                            </el-form-item>
-                            <el-form-item label="开课时间" label-position="left" :label-width="formLabelWidth">
-                                <el-date-picker v-model="editClassForm.openTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择开课时间"> </el-date-picker>
-                            </el-form-item>
-                            <el-form-item label="结课时间" label-position="left" :label-width="formLabelWidth">
-                                <el-date-picker v-model="editClassForm.closeTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择结课时间"> </el-date-picker>
-                            </el-form-item>
-                            <el-form-item label="班主任" label-position="left" :label-width="formLabelWidth" placeholder="请选择">
-                                <el-select v-model="editClassForm.classTeacher">
-                                    <el-option label="班主任1" value="班主任1"></el-option>
-                                    <el-option label="班主任2" value="班主任2"></el-option>
-                                    <el-option label="班主任3" value="班主任3"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-form>
-                        <div slot="footer" class="dialog-footer">
-                            <el-button @click="editClassDialogVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="editClassDataUpdate()">确 定</el-button>
-                        </div>
-                    </el-dialog>
-
-                    <!-- 删除班级按钮的内容 -->
-                    <el-dialog title="删除班级" :visible.sync="delClassDialogVisible" width="30%" :before-close="handleClose">
-                        <span>您确定要删除该班级吗？</span>
-                        <span slot="footer" class="dialog-footer">
-                            <el-button @click="delClassDialogVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="delClassDataUpdate()">确 定</el-button>
-                        </span>
-                    </el-dialog>
+                    <router-view></router-view>
                 </el-main>
             </el-container>
         </el-container>
@@ -159,7 +55,7 @@ export default {
             addClassDialogVisible: false,
             editClassDialogVisible: false,
             delClassDialogVisible: false,
-            formLabelWidth: "80px",
+            formLabelWidth: "100px",
             currentPage: 1, // 当前页数
             pageSize: 10, // 每页显示条目数
             total: 0, // 总条目数
@@ -167,6 +63,19 @@ export default {
                 name: "",
                 gender: "",
                 entrydate: [],
+            },
+            rules: {
+                className: [
+                    { required: true, message: "请输入班级名称", trigger: "blur" },
+                    { min: 4, max: 30, message: "长度在 4 到 30 个字符", trigger: "blur" },
+                ],
+                classRoom: [
+                    { required: false, message: "请填写班级教室", trigger: "blur" },
+                    { min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur" },
+                ],
+                openTime: [{ type: "date", required: true, message: "请选择开课时间", trigger: "change" }],
+                closeTime: [{ type: "date", required: true, message: "请选择结课时间", trigger: "change" }],
+                classTeacher: [{ required: true, message: "请选择", trigger: "change" }],
             },
             //用来绑定表单数据
             addClassForm: {
@@ -242,7 +151,8 @@ export default {
             this.addClassDialogVisible = false;
         },
         editClassDataUpdate() {
-            const index = this.editClassForm.index;
+            //使用班级名称作为唯一标识，找到对应的数据
+            let index = -1;
             this.SQLData[index - 1] = { ...this.editClassForm }; //模拟更新数据库
             this.classData[index - 1] = { ...this.editClassForm }; //更新表格数据
             this.loadData(); // 刷新表格
