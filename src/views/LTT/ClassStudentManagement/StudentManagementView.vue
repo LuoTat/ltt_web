@@ -1,157 +1,136 @@
 <template>
-    <div style="text-align: center">
-        <el-container style="border: 1px, solid, #eee">
-            <!-- 标题位置，加按钮 -->
-            <el-header style="font-size: 40px; background-color: rgb(238, 241, 246)">
-                LTT管理系统
-                <el-button type="primary" @click="editPasswd()">修改密码</el-button>
-                <el-button type="primary" @click="logOut()">退出登录</el-button>
-            </el-header>
+    <!-- 右侧主界面 -->
+    <el-main>
+        学员管理
+        <!-- 查询栏 -->
+        <el-form :inline="true" :model="studentSearchForm" class="demo-form-inline">
+            <el-form-item label="学员姓名">
+                <el-input v-model="studentSearchForm.studentName" placeholder="请输入班级名称"></el-input>
+            </el-form-item>
+            <el-form-item label="学号">
+                <el-date-picker v-model="studentSearchForm.studentID" placeholder="请输入学号"> </el-date-picker>
+            </el-form-item>
+            <el-form-item label="最高学历">
+                <el-select v-model="studentSearchForm.highestEducationLevel" placeholder="请选择">
+                    <el-option label="大学" value="大学"></el-option>
+                    <el-option label="小学" value="小学"></el-option>
+                    <el-option label="文盲" value="文盲"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="所属班级">
+                <el-select v-model="studentSearchForm.highestEducationLevel" placeholder="请选择">
+                    <el-option label="班1" value="班1"></el-option>
+                    <el-option label="班2" value="班2"></el-option>
+                    <el-option label="班3" value="班3"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="searchClass">查询</el-button>
+            </el-form-item>
+        </el-form>
 
-            <el-container>
-                <!-- 侧边栏 -->
-                <el-aside width="200px">
-                    <el-menu router :default-openeds="['1', '3']">
-                        <el-submenu index="1">
-                            <template slot="title"><i class="el-icon-message"></i>班级学员管理</template>
-                            <el-menu-item index="1-1">
-                                <router-link to="/ClassStudentManagement/ClassManagement">班级管理</router-link>
-                            </el-menu-item>
-                            <el-menu-item index="1-2">
-                                <router-link to="/ClassStudentManagement/StudentManagement">学员管理</router-link>
-                            </el-menu-item>
-                        </el-submenu>
-                        <el-submenu index="2">
-                            <template slot="title"><i class="el-icon-message"></i>系统信息管理</template>
-                            <el-menu-item index="1-1">
-                                <router-link to="/DepartmentManagement">部门管理</router-link>
-                            </el-menu-item>
-                            <el-menu-item index="1-2">
-                                <router-link to="/EmployeeManagement">员工管理</router-link>
-                            </el-menu-item>
-                        </el-submenu>
-                        <el-submenu index="3">
-                            <template slot="title"><i class="el-icon-message"></i>数据统计管理</template>
-                            <el-menu-item index="1-1">
-                                <router-link to="/EmployeeInformationStatistics">员工信息统计</router-link>
-                            </el-menu-item>
-                        </el-submenu>
-                    </el-menu>
-                </el-aside>
+        <!-- 新增班级按钮 -->
+        <el-button type="primary" @click="addClassDialogVisible = true">+新增学员</el-button>
+        <el-button type="primary" @click="addClassDialogVisible = true">-批量删除</el-button>
 
-                <!-- 右侧主界面 -->
-                <el-main>
-                    <!-- 查询栏 -->
-                    <el-form :inline="true" :model="searchForm" class="demo-form-inline">
-                        <el-form-item label="班级名称">
-                            <el-input v-model="searchForm.name" placeholder="请输入班级名称"></el-input>
-                        </el-form-item>
+        <!-- 表格 -->
+        <el-table ref="multipleTable" :data="showData">
+            <el-table-column type="selection" width="55"> </el-table-column>
+            <el-table-column prop="studentName" label="姓名" width="100"> </el-table-column>
+            <el-table-column prop="studentID" label="学号" width="100"> </el-table-column>
+            <el-table-column prop="className" label="班级" width="180"> </el-table-column>
+            <el-table-column prop="gender" label="性别" width="180"> </el-table-column>
+            <el-table-column prop="phoneNumber" label="手机号" width="180"> </el-table-column>
+            <el-table-column prop="highestEducationLevel" label="最高学历" width="100"> </el-table-column>
+            <el-table-column prop="numberOfInfractions" label="违纪次数" width="100"> </el-table-column>
+            <el-table-column prop="pointsForDisciplinary" label="违纪扣分" width="100"> </el-table-column>
+            <el-table-column prop="lastOperationTime" label="最后操作时间" width="140"> </el-table-column>
 
-                        <el-form-item label="结课时间">
-                            <el-date-picker v-model="searchForm.entrydate" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"> </el-date-picker>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" @click="searchClass">查询</el-button>
-                        </el-form-item>
-                    </el-form>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <!-- 编辑按钮 -->
+                    <el-button type="primary" @click="showEditClassDialog(scope.row.index)" size="mini">编辑</el-button>
+                    <!-- 违纪按钮 -->
+                    <el-button type="primary" @click="showEditClassDialog(scope.row.index)" size="mini">违纪</el-button>
 
-                    <!-- 新增班级按钮 -->
-                    <el-button type="primary" @click="addClassDialogVisible = true">+新增班级</el-button>
+                    <!-- 删除按钮 -->
+                    <el-button type="danger" @click="delClassDialogVisible = true" size="mini">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
 
-                    <!-- 表格 -->
-                    <el-table :data="showData">
-                        <el-table-column type="index" :index="indexMethod()" label="序号" width="80"> </el-table-column>
-                        <el-table-column prop="className" label="班级名称" width="100"> </el-table-column>
-                        <el-table-column prop="classRoom" label="班级教室" width="100"> </el-table-column>
-                        <el-table-column prop="openTime" label="开课时间" width="180"> </el-table-column>
-                        <el-table-column prop="closeTime" label="结课时间" width="180"> </el-table-column>
-                        <el-table-column prop="classTeacher" label="班主任" width="100"> </el-table-column>
-                        <el-table-column label="操作">
-                            <template slot-scope="scope">
-                                <!-- 编辑班级按钮 -->
-                                <el-button type="primary" @click="showEditClassDialog(scope.row.index)" size="mini">编辑</el-button>
+        <!-- 表格导航栏 -->
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="total" background layout="sizes,prev,pager,next,jumper,total"> </el-pagination>
 
-                                <!-- 删除班级按钮 -->
-                                <el-button type="danger" @click="delClassDialogVisible = true" size="mini">删除</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
+        <!-- 下面是当前页面所有的对话框 -->
 
-                    <!-- 表格导航栏 -->
-                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="total" background layout="sizes,prev,pager,next,jumper,total"> </el-pagination>
+        <!-- 新增学员按钮的内容 -->
+        <el-dialog title="新增班级" :visible.sync="addClassDialogVisible">
+            <el-form :model="addClassForm" :rules="rules" ref="ruleForm">
+                <el-form-item label="班级名称" prop="className" label-position="left" :label-width="formLabelWidth">
+                    <el-input v-model="addClassForm.className" placeholder="请输入班级名称"></el-input>
+                </el-form-item>
+                <el-form-item label="班级教室" prop="classRoom" label-position="left" :label-width="formLabelWidth">
+                    <el-input v-model="addClassForm.classRoom" placeholder="请填写班级教室"> </el-input>
+                </el-form-item>
+                <el-form-item label="开课时间" prop="openTime" label-position="left" :label-width="formLabelWidth">
+                    <el-date-picker v-model="addClassForm.openTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择开课时间"> </el-date-picker>
+                </el-form-item>
+                <el-form-item label="结课时间" prop="closeTime" label-position="left" :label-width="formLabelWidth">
+                    <el-date-picker v-model="addClassForm.closeTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择结课时间"> </el-date-picker>
+                </el-form-item>
+                <el-form-item label="班主任" prop="classTeacher" label-position="left" :label-width="formLabelWidth">
+                    <el-select v-model="addClassForm.classTeacher" placeholder="请选择">
+                        <el-option label="班主任1" value="班主任1"></el-option>
+                        <el-option label="班主任2" value="班主任2"></el-option>
+                        <el-option label="班主任3" value="班主任3"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="addClassDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="addClassDataUpdate()">确 定</el-button>
+            </div>
+        </el-dialog>
 
-                    <!-- 下面是当前页面所有的对话框 -->
+        <!-- 编辑班级按钮的内容 -->
+        <el-dialog title="编辑班级" :visible.sync="editClassDialogVisible">
+            <el-form :model="editClassForm">
+                <el-form-item label="班级名称" label-position="left" :label-width="formLabelWidth">
+                    <el-input v-model="editClassForm.className" placeholder="请输入班级名称"></el-input>
+                </el-form-item>
+                <el-form-item label="班级教室" label-position="left" :label-width="formLabelWidth">
+                    <el-input v-model="editClassForm.classRoom" placeholder="请填写班级教室"> </el-input>
+                </el-form-item>
+                <el-form-item label="开课时间" label-position="left" :label-width="formLabelWidth">
+                    <el-date-picker v-model="editClassForm.openTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择开课时间"> </el-date-picker>
+                </el-form-item>
+                <el-form-item label="结课时间" label-position="left" :label-width="formLabelWidth">
+                    <el-date-picker v-model="editClassForm.closeTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择结课时间"> </el-date-picker>
+                </el-form-item>
+                <el-form-item label="班主任" label-position="left" :label-width="formLabelWidth" placeholder="请选择">
+                    <el-select v-model="editClassForm.classTeacher">
+                        <el-option label="班主任1" value="班主任1"></el-option>
+                        <el-option label="班主任2" value="班主任2"></el-option>
+                        <el-option label="班主任3" value="班主任3"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="editClassDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="editClassDataUpdate()">确 定</el-button>
+            </div>
+        </el-dialog>
 
-                    <!-- 新增班级按钮的内容 -->
-                    <el-dialog title="新增班级" :visible.sync="addClassDialogVisible">
-                        <el-form :model="addClassForm" :rules="rules" ref="ruleForm">
-                            <el-form-item label="班级名称" prop="className" label-position="left" :label-width="formLabelWidth">
-                                <el-input v-model="addClassForm.className" placeholder="请输入班级名称"></el-input>
-                            </el-form-item>
-                            <el-form-item label="班级教室" prop="classRoom" label-position="left" :label-width="formLabelWidth">
-                                <el-input v-model="addClassForm.classRoom" placeholder="请填写班级教室"> </el-input>
-                            </el-form-item>
-                            <el-form-item label="开课时间" prop="openTime" label-position="left" :label-width="formLabelWidth">
-                                <el-date-picker v-model="addClassForm.openTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择开课时间"> </el-date-picker>
-                            </el-form-item>
-                            <el-form-item label="结课时间" prop="closeTime" label-position="left" :label-width="formLabelWidth">
-                                <el-date-picker v-model="addClassForm.closeTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择结课时间"> </el-date-picker>
-                            </el-form-item>
-                            <el-form-item label="班主任" prop="classTeacher" label-position="left" :label-width="formLabelWidth">
-                                <el-select v-model="addClassForm.classTeacher" placeholder="请选择">
-                                    <el-option label="班主任1" value="班主任1"></el-option>
-                                    <el-option label="班主任2" value="班主任2"></el-option>
-                                    <el-option label="班主任3" value="班主任3"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-form>
-                        <div slot="footer" class="dialog-footer">
-                            <el-button @click="addClassDialogVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="addClassDataUpdate()">确 定</el-button>
-                        </div>
-                    </el-dialog>
-
-                    <!-- 编辑班级按钮的内容 -->
-                    <el-dialog title="编辑班级" :visible.sync="editClassDialogVisible">
-                        <el-form :model="editClassForm">
-                            <el-form-item label="班级名称" label-position="left" :label-width="formLabelWidth">
-                                <el-input v-model="editClassForm.className" placeholder="请输入班级名称"></el-input>
-                            </el-form-item>
-                            <el-form-item label="班级教室" label-position="left" :label-width="formLabelWidth">
-                                <el-input v-model="editClassForm.classRoom" placeholder="请填写班级教室"> </el-input>
-                            </el-form-item>
-                            <el-form-item label="开课时间" label-position="left" :label-width="formLabelWidth">
-                                <el-date-picker v-model="editClassForm.openTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择开课时间"> </el-date-picker>
-                            </el-form-item>
-                            <el-form-item label="结课时间" label-position="left" :label-width="formLabelWidth">
-                                <el-date-picker v-model="editClassForm.closeTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择结课时间"> </el-date-picker>
-                            </el-form-item>
-                            <el-form-item label="班主任" label-position="left" :label-width="formLabelWidth" placeholder="请选择">
-                                <el-select v-model="editClassForm.classTeacher">
-                                    <el-option label="班主任1" value="班主任1"></el-option>
-                                    <el-option label="班主任2" value="班主任2"></el-option>
-                                    <el-option label="班主任3" value="班主任3"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-form>
-                        <div slot="footer" class="dialog-footer">
-                            <el-button @click="editClassDialogVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="editClassDataUpdate()">确 定</el-button>
-                        </div>
-                    </el-dialog>
-
-                    <!-- 删除班级按钮的内容 -->
-                    <el-dialog title="删除班级" :visible.sync="delClassDialogVisible" width="30%" :before-close="handleClose">
-                        <span>您确定要删除该班级吗？</span>
-                        <span slot="footer" class="dialog-footer">
-                            <el-button @click="delClassDialogVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="delClassDataUpdate()">确 定</el-button>
-                        </span>
-                    </el-dialog>
-                </el-main>
-            </el-container>
-        </el-container>
-    </div>
+        <!-- 删除班级按钮的内容 -->
+        <el-dialog title="删除班级" :visible.sync="delClassDialogVisible" width="30%" :before-close="handleClose">
+            <span>您确定要删除该班级吗？</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="delClassDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="delClassDataUpdate()">确 定</el-button>
+            </span>
+        </el-dialog>
+    </el-main>
 </template>
 
 <script>
@@ -167,10 +146,16 @@ export default {
             currentPage: 1, // 当前页数
             pageSize: 10, // 每页显示条目数
             total: 0, // 总条目数
-            searchForm: {
-                name: "",
+            studentSearchForm: {
+                studentName: "",
+                studentID: "",
+                className: "",
                 gender: "",
-                entrydate: [],
+                phoneNumber: "",
+                highestEducationLevel: "",
+                numberOfInfractions: -1,
+                pointsForDisciplinary: -1,
+                lastOperationTime: "",
             },
             rules: {
                 className: [
@@ -206,28 +191,32 @@ export default {
             showData: [],
             classData: [],
             SQLData: [
-                { className: "班级1", classRoom: "教室1", openTime: "2021-01-01", closeTime: "2021-06-01", classTeacher: "班主任1" },
-                { className: "班级2", classRoom: "教室2", openTime: "2021-02-01", closeTime: "2021-07-01", classTeacher: "班主任2" },
-                { className: "班级3", classRoom: "教室3", openTime: "2021-03-01", closeTime: "2021-08-01", classTeacher: "班主任3" },
-                { className: "班级4", classRoom: "教室4", openTime: "2021-04-01", closeTime: "2021-09-01", classTeacher: "班主任4" },
-                { className: "班级5", classRoom: "教室5", openTime: "2021-05-01", closeTime: "2021-10-01", classTeacher: "班主任5" },
-                { className: "班级6", classRoom: "教室6", openTime: "2021-06-01", closeTime: "2021-11-01", classTeacher: "班主任6" },
-                { className: "班级7", classRoom: "教室7", openTime: "2021-07-01", closeTime: "2021-12-01", classTeacher: "班主任7" },
-                { className: "班级8", classRoom: "教室8", openTime: "2021-08-01", closeTime: "2022-01-01", classTeacher: "班主任8" },
-                { className: "班级9", classRoom: "教室9", openTime: "2021-09-01", closeTime: "2022-02-01", classTeacher: "班主任9" },
-                { className: "班级10", classRoom: "教室10", openTime: "2021-10-01", closeTime: "2022-03-01", classTeacher: "班主任10" },
-                { className: "班级11", classRoom: "教室11", openTime: "2021-11-01", closeTime: "2022-04-01", classTeacher: "班主任11" },
-                { className: "班级12", classRoom: "教室12", openTime: "2021-12-01", closeTime: "2022-05-01", classTeacher: "班主任12" },
-                { className: "班级13", classRoom: "教室13", openTime: "2022-01-01", closeTime: "2022-06-01", classTeacher: "班主任13" },
-                { className: "班级14", classRoom: "教室14", openTime: "2022-02-01", closeTime: "2022-07-01", classTeacher: "班主任14" },
-                { className: "班级15", classRoom: "教室15", openTime: "2022-03-01", closeTime: "2022-08-01", classTeacher: "班主任15" },
+                { studentName: "学员1", studentID: "00001", className: "教室1", gender: "男", phoneNumber: "100-0001", highestEducationLevel: "大学", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员2", studentID: "00002", className: "教室2", gender: "女", phoneNumber: "100-0002", highestEducationLevel: "小学", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员3", studentID: "00003", className: "教室3", gender: "男", phoneNumber: "100-0003", highestEducationLevel: "文盲", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员4", studentID: "00004", className: "教室4", gender: "女", phoneNumber: "100-0004", highestEducationLevel: "大学", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员5", studentID: "00005", className: "教室5", gender: "男", phoneNumber: "100-0005", highestEducationLevel: "小学", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员6", studentID: "00006", className: "教室6", gender: "女", phoneNumber: "100-0006", highestEducationLevel: "文盲", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员7", studentID: "00007", className: "教室7", gender: "男", phoneNumber: "100-0007", highestEducationLevel: "大学", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员8", studentID: "00008", className: "教室8", gender: "女", phoneNumber: "100-0008", highestEducationLevel: "小学", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员9", studentID: "00009", className: "教室9", gender: "男", phoneNumber: "100-0009", highestEducationLevel: "文盲", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员10", studentID: "00010", className: "教室10", gender: "女", phoneNumber: "100-0010", highestEducationLevel: "大学", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员11", studentID: "00011", className: "教室11", gender: "男", phoneNumber: "100-0011", highestEducationLevel: "小学", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员12", studentID: "00012", className: "教室12", gender: "女", phoneNumber: "100-0012", highestEducationLevel: "文盲", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员13", studentID: "00013", className: "教室13", gender: "男", phoneNumber: "100-0013", highestEducationLevel: "大学", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员14", studentID: "00014", className: "教室14", gender: "女", phoneNumber: "100-0014", highestEducationLevel: "小学", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员15", studentID: "00015", className: "教室15", gender: "男", phoneNumber: "100-0015", highestEducationLevel: "文盲", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员16", studentID: "00016", className: "教室16", gender: "女", phoneNumber: "100-0016", highestEducationLevel: "大学", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员17", studentID: "00017", className: "教室17", gender: "男", phoneNumber: "100-0017", highestEducationLevel: "小学", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员18", studentID: "00018", className: "教室18", gender: "女", phoneNumber: "100-0018", highestEducationLevel: "文盲", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
+                { studentName: "学员19", studentID: "00019", className: "教室19", gender: "男", phoneNumber: "100-0019", highestEducationLevel: "大学", numberOfInfractions: 0, pointsForDisciplinary: 0, lastOperationTime: "2023-03-25" },
             ],
         };
     },
     methods: {
         searchClass() {
             // 待实现查询代码
-            console.log(this.searchForm);
+            console.log(this.studentSearchForm);
         },
         handleSizeChange(val) {
             this.pageSize = val;

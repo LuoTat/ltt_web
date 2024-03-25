@@ -2,8 +2,6 @@
     <div>Hello World!</div>
 </template>
 
-<script>
-export default {};
-</script>
+<script></script>
 
 <style></style>
