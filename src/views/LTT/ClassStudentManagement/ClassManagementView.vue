@@ -3,7 +3,7 @@
     <el-main>
         班级管理
         <!-- 查询栏 -->
-        <el-form :inline="true" :model="classSearchData" class="demo-form-inline">
+        <el-form :model="classSearchData" inline="true">
             <el-form-item label="班级名称">
                 <el-input v-model="classSearchData.name" placeholder="请输入班级名称"></el-input>
             </el-form-item>
@@ -11,40 +11,55 @@
                 <el-date-picker v-model="classSearchData.entrydate" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"> </el-date-picker>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="searchClass()">查询</el-button>
+                <el-button type="primary" @click="searchClass()">查 询</el-button>
             </el-form-item>
         </el-form>
 
         <!-- 新增班级按钮 -->
-        <el-button type="primary" @click="addClassDialogVisible = true">+新增班级</el-button>
+        <el-button type="primary" @click="addClassDialogVisible = true">+ 新增班级</el-button>
 
         <!-- 表格 -->
 
         <el-table :data="showData">
-            <el-table-column type="index" :index="indexMethod()" label="序号" width="80"> </el-table-column>
-            <el-table-column prop="className" label="班级名称" width="100"> </el-table-column>
-            <el-table-column prop="classRoom" label="班级教室" width="100"> </el-table-column>
-            <el-table-column prop="openTime" label="开课时间" width="180"> </el-table-column>
-            <el-table-column prop="closeTime" label="结课时间" width="180"> </el-table-column>
-            <el-table-column prop="classTeacher" label="班主任" width="100"> </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column type="index" :index="indexMethod()" label="序号" min-width="100px" align="left"> </el-table-column>
+            <el-table-column prop="className" label="班级名称" min-width="100px"> </el-table-column>
+            <el-table-column prop="classRoom" label="班级教室" min-width="100px"> </el-table-column>
+            <el-table-column prop="openTime" label="开课时间" min-width="100px"> </el-table-column>
+            <el-table-column prop="closeTime" label="结课时间" min-width="100px"> </el-table-column>
+            <el-table-column prop="classTeacher" label="班主任" min-width="100px"> </el-table-column>
+            <el-table-column label="操作" min-width="120px" align="right">
                 <template slot-scope="scope">
                     <!-- 编辑班级按钮 -->
-                    <el-button type="primary" @click="showEditClassDialog(scope.$index)" size="mini">编辑</el-button>
-
+                    <el-button type="primary" @click="showEditClassDialog(scope.$index)" size="mini">编 辑</el-button>
                     <!-- 删除班级按钮 -->
-                    <el-button type="danger" @click="delClassDialogVisible = true" size="mini">删除</el-button>
+                    <el-button type="danger" @click="delClassDialogVisible = true" size="mini">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
         <!-- 表格导航栏 -->
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="total" background layout="sizes,prev,pager,next,jumper,total"> </el-pagination>
+        <el-row>
+            <el-col :span="4">
+                <div style="text-align: left">
+                    <el-pagination @size-change="handleSizeChange" :current-page="currentPage" :page-size="pageSize" :total="totalPage" layout="sizes"> </el-pagination>
+                </div>
+            </el-col>
+            <el-col :span="16">
+                <div style="text-align: center">
+                    <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="totalPage" background layout="prev,pager,next,jumper"> </el-pagination>
+                </div>
+            </el-col>
+            <el-col :span="4">
+                <div style="text-align: right">
+                    <el-pagination :total="totalPage" layout="total"> </el-pagination>
+                </div>
+            </el-col>
+        </el-row>
 
         <!-- 下面是当前页面所有的对话框 -->
 
         <!-- 新增班级按钮的内容 -->
-        <el-dialog title="新增班级" :visible.sync="addClassDialogVisible">
+        <el-dialog title="新增班级" :visible.sync="addClassDialogVisible" :before-close="handleAddClassClose">
             <el-form :model="addClassData" :rules="classRules" ref="addClassForm">
                 <el-form-item label="班级名称" prop="className" label-position="left" :label-width="formLabelWidth">
                     <el-input v-model="addClassData.className" placeholder="请输入班级名称,如:2024第01期10班"></el-input>
@@ -73,7 +88,7 @@
         </el-dialog>
 
         <!-- 编辑班级按钮的内容 -->
-        <el-dialog title="编辑班级" :visible.sync="editClassDialogVisible">
+        <el-dialog title="编辑班级" :visible.sync="editClassDialogVisible" :before-close="handleEditClassClose">
             <el-form :model="editClassData" :rules="classRules" ref="editClassForm">
                 <el-form-item label="班级名称" prop="className" label-position="left" :label-width="formLabelWidth">
                     <el-input v-model="editClassData.className" placeholder="请输入班级名称,如:2024第01期10班"></el-input>
@@ -106,7 +121,7 @@
             <span>您确定要删除该班级吗？</span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="delClassDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="delClassDataUpdate()">确 定</el-button>
+                <el-button type="danger" @click="delClassDataUpdate()">确 定</el-button>
             </span>
         </el-dialog>
     </el-main>
@@ -124,7 +139,7 @@ export default {
             formLabelWidth: "100px",
             currentPage: 1, // 当前页数
             pageSize: 10, // 每页显示条目数
-            total: 0, // 总条目数
+            totalPage: 0, // 总条目数
             classSearchData: {
                 name: "",
                 gender: "",
@@ -195,15 +210,23 @@ export default {
         loadData() {
             // 根据当前页数和每页显示条目数获取数据，这里是示例数据，您需要根据实际情况调整
             this.showData = this.classData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize);
-            this.total = this.classData.length;
+            this.totalPage = this.classData.length;
         },
         indexMethod() {
             return (this.currentPage - 1) * this.pageSize + 1;
         },
+        handleAddClassClose(done) {
+            this.$confirm("确认关闭？")
+                .then(() => {
+                    //清空表单数据
+                    done();
+                })
+                .catch(() => {});
+        },
         addClassDataSubmit(addClassForm) {
             this.$refs[addClassForm].validate((valid) => {
                 if (!valid) {
-                    alert("ERROR!");
+                    return false;
                 } else {
                     alert("Success!");
                     //判断是否有重复数据
@@ -211,6 +234,7 @@ export default {
                 }
             });
         },
+        //multiple
         resetAddClassForm(addClassForm) {
             this.$refs[addClassForm].resetFields();
             this.addClassDialogVisible = false;
@@ -222,18 +246,28 @@ export default {
             this.editClassData = { ...this.classData[_index] };
             this.editClassDialogVisible = true;
         },
+        handleEditClassClose(done) {
+            this.$confirm("确认关闭？")
+                .then(() => {
+                    //清空表单数据
+                    done();
+                })
+                .catch(() => {});
+        },
         editClassDataSubmit(editClassForm) {
             this.$refs[editClassForm].validate((valid) => {
                 if (!valid) {
                     return false;
                 } else {
-                    //新建一个对话框，提示是否添加成功
+                    //判断是否有重复数据
+                    //新建一个对话框，提示是否编辑成功
                 }
             });
             // 关闭编辑对话框
             this.editClassDialogVisible = false;
         },
         delClassDataUpdate() {
+            // 向数据库中删除数据
             // 关闭删除对话框
             this.delClassDialogVisible = false;
         },

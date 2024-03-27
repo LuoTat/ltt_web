@@ -1,8 +1,8 @@
 <template>
-    <div style="width: 1000px; margin: auto">
-        <el-container style="border: 1px, solid, #eee">
+    <div style="width: 1400px; margin: auto">
+        <el-container style="border: 1px, solid, #eeeeee">
             <!-- 标题位置，加按钮 -->
-            <el-header style="font-size: 40px; background-color: rgb(238, 241, 246)">
+            <el-header style="font-size: 40px; background-color: #eef1f6">
                 LTT管理系统
                 <el-button type="primary" @click="editPasswd()">修改密码</el-button>
                 <el-button type="primary" @click="logOut()">退出登录</el-button>
