@@ -30,8 +30,8 @@
         </el-form>
 
         <!-- 新增班级按钮 -->
-        <el-button type="primary" @click="addClassDialogVisible = true">+新增学员</el-button>
-        <el-button type="primary" @click="addClassDialogVisible = true">-批量删除</el-button>
+        <el-button type="primary" @click="addStudentDialogVisible = true">+新增学员</el-button>
+        <el-button type="primary" @click="delStudentDialogVisible = true">-批量删除</el-button>
 
         <!-- 表格 -->
         <el-table ref="multipleTable" :data="showData">
@@ -65,31 +65,34 @@
         <!-- 下面是当前页面所有的对话框 -->
 
         <!-- 新增学员按钮的内容 -->
-        <el-dialog title="新增班级" :visible.sync="addClassDialogVisible">
+        <el-dialog title="新增学员" :visible.sync="addStudentDialogVisible">
             <el-form :model="addClassForm" :rules="rules" ref="ruleForm">
-                <el-form-item label="班级名称" prop="className" label-position="left" :label-width="formLabelWidth">
-                    <el-input v-model="addClassForm.className" placeholder="请输入班级名称"></el-input>
+                <el-form-item label="姓名" prop="studentName" label-position="left" :label-width="formLabelWidth">
+                    <el-input v-model="addStudentForm.studentName" placeholder="请输入姓名"></el-input>
                 </el-form-item>
-                <el-form-item label="班级教室" prop="classRoom" label-position="left" :label-width="formLabelWidth">
-                    <el-input v-model="addClassForm.classRoom" placeholder="请填写班级教室"> </el-input>
+                <el-form-item label="学号" prop="studentID" label-position="left" :label-width="formLabelWidth">
+                    <el-input v-model="addStudentForm.studentID" placeholder="请输入学号"> </el-input>
                 </el-form-item>
-                <el-form-item label="开课时间" prop="openTime" label-position="left" :label-width="formLabelWidth">
-                    <el-date-picker v-model="addClassForm.openTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择开课时间"> </el-date-picker>
+                <el-form-item label="性别" prop="gender" label-position="left" :label-width="formLabelWidth">
+                    <el-select v-model="addStudentForm.gender" placeholder="请选择">
+                        <el-option label="男" value="男"></el-option>
+                        <el-option label="女" value="女"></el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="结课时间" prop="closeTime" label-position="left" :label-width="formLabelWidth">
-                    <el-date-picker v-model="addClassForm.closeTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择结课时间"> </el-date-picker>
+                <el-form-item label="手机号" prop="phoneNumber" label-position="left" :label-width="formLabelWidth">
+                    <el-input v-model="addtStudentForm.phoneNumber" placeholder="请输入手机号"> </el-input>
                 </el-form-item>
-                <el-form-item label="班主任" prop="classTeacher" label-position="left" :label-width="formLabelWidth">
-                    <el-select v-model="addClassForm.classTeacher" placeholder="请选择">
-                        <el-option label="班主任1" value="班主任1"></el-option>
-                        <el-option label="班主任2" value="班主任2"></el-option>
-                        <el-option label="班主任3" value="班主任3"></el-option>
+                <el-form-item label="最高学历" prop="highestEducationLevel" label-position="left" :label-width="formLabelWidth">
+                    <el-select v-model="addtStudentForm.highestEducationLevel" placeholder="请选择">
+                        <el-option label="大学" value="大学"></el-option>
+                        <el-option label="高中" value="高中"></el-option>
+                        <el-option label="文盲" value="文盲"></el-option>
                     </el-select>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="addClassDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="addClassDataUpdate()">确 定</el-button>
+                <el-button @click="addStudentDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="addStudentDataUpdate()">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -139,9 +142,9 @@
 export default {
     data() {
         return {
-            addClassDialogVisible: false,
-            editClassDialogVisible: false,
-            delClassDialogVisible: false,
+            addStudentDialogVisible: false,
+            editStudentDialogVisible: false,
+            delStudentDialogVisible: false,
             formLabelWidth: "100px",
             currentPage: 1, // 当前页数
             pageSize: 10, // 每页显示条目数
@@ -239,7 +242,7 @@ export default {
             this.editClassForm = { ...this.classData[index - 1] };
             this.editClassDialogVisible = true;
         },
-        addClassDataUpdate() {
+        addStudentDataUpdate() {
             this.addClassForm.index = this.SQLData.length + 1;
             this.SQLData.push({ ...this.addClassForm }); //模拟更新数据库
             this.classData.push({ ...this.addClassForm }); //更新表格数据
