@@ -59,7 +59,7 @@
         <!-- 下面是当前页面所有的对话框 -->
 
         <!-- 新增班级按钮的内容 -->
-        <el-dialog title="新增班级" :visible.sync="addClassDialogVisible" :before-close="handleAddClassClose">
+        <el-dialog title="新增班级" :visible.sync="addClassDialogVisible" :before-close="handleClose">
             <el-form :model="addClassData" :rules="classRules" ref="addClassForm">
                 <el-form-item label="班级名称" prop="className" label-position="left" :label-width="formLabelWidth">
                     <el-input v-model="addClassData.className" placeholder="请输入班级名称,如:2024第01期10班"></el-input>
@@ -88,7 +88,7 @@
         </el-dialog>
 
         <!-- 编辑班级按钮的内容 -->
-        <el-dialog title="编辑班级" :visible.sync="editClassDialogVisible" :before-close="handleEditClassClose">
+        <el-dialog title="编辑班级" :visible.sync="editClassDialogVisible" :before-close="handleClose">
             <el-form :model="editClassData" :rules="classRules" ref="editClassForm">
                 <el-form-item label="班级名称" prop="className" label-position="left" :label-width="formLabelWidth">
                     <el-input v-model="editClassData.className" placeholder="请输入班级名称,如:2024第01期10班"></el-input>
@@ -117,7 +117,7 @@
         </el-dialog>
 
         <!-- 删除班级按钮的内容 -->
-        <el-dialog title="删除班级" :visible.sync="delClassDialogVisible">
+        <el-dialog title="删除班级" :visible.sync="delClassDialogVisible" :before-close="handleClose">
             <span>您确定要删除该班级吗？</span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="delClassDialogVisible = false">取 消</el-button>
@@ -207,6 +207,13 @@ export default {
             this.currentPage = val;
             this.loadData();
         },
+        handleClose(done) {
+            this.$confirm("确认关闭？")
+                .then(() => {
+                    done();
+                })
+                .catch(() => {});
+        },
         loadData() {
             // 根据当前页数和每页显示条目数获取数据，这里是示例数据，您需要根据实际情况调整
             this.showData = this.classData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize);
@@ -214,14 +221,6 @@ export default {
         },
         indexMethod() {
             return (this.currentPage - 1) * this.pageSize + 1;
-        },
-        handleAddClassClose(done) {
-            this.$confirm("确认关闭？")
-                .then(() => {
-                    //清空表单数据
-                    done();
-                })
-                .catch(() => {});
         },
         addClassDataSubmit(addClassForm) {
             this.$refs[addClassForm].validate((valid) => {
@@ -245,14 +244,6 @@ export default {
             let _index = index + (this.currentPage - 1) * this.pageSize;
             this.editClassData = { ...this.classData[_index] };
             this.editClassDialogVisible = true;
-        },
-        handleEditClassClose(done) {
-            this.$confirm("确认关闭？")
-                .then(() => {
-                    //清空表单数据
-                    done();
-                })
-                .catch(() => {});
         },
         editClassDataSubmit(editClassForm) {
             this.$refs[editClassForm].validate((valid) => {

@@ -42,11 +42,11 @@
         </el-form>
 
         <!-- 新增学员按钮 -->
-        <el-button type="primary" @click="addStudentDialogVisible = true">+新增学员</el-button>
-        <el-button type="primary" @click="delStudentDialogVisible = true">-批量删除</el-button>
+        <el-button type="primary" @click="addStudentDialogVisible = true">+ 新增学员</el-button>
+        <el-button type="primary" @click="multDelStudentDialogVisible = true">- 批量删除</el-button>
 
         <!-- 表格 -->
-        <el-table ref="multipleTable" :data="showData">
+        <el-table ref="multiDelTable" :data="showData" @selection-change="handleSelectionChange">
             <el-table-column type="selection" min-width="50px" align="left" fixed="left"> </el-table-column>
             <el-table-column prop="studentName" label="姓名" min-width="100px"> </el-table-column>
             <el-table-column prop="studentID" label="学号" min-width="100px"> </el-table-column>
@@ -91,7 +91,7 @@
         <!-- 下面是当前页面所有的对话框 -->
 
         <!-- 新增学员按钮的内容 -->
-        <el-dialog title="新增学员" :visible.sync="addStudentDialogVisible" :before-close="handleAddStudentClose">
+        <el-dialog title="新增学员" :visible.sync="addStudentDialogVisible" :before-close="handleClose">
             <el-form :model="addStudentData" :rules="studentRules" ref="addStudentForm">
                 <el-form-item label="姓名" prop="studentName" label-position="left" :label-width="formLabelWidth">
                     <el-input v-model="addStudentData.studentName" placeholder="请输入姓名"></el-input>
@@ -129,32 +129,51 @@
             </div>
         </el-dialog>
 
-        <!-- 编辑班级按钮的内容 -->
-        <el-dialog title="编辑班级" :visible.sync="editStudentDialogVisible">
-            <el-form :model="editStudentData">
-                <el-form-item label="班级名称" label-position="left" :label-width="formLabelWidth">
-                    <el-input v-model="editStudentData.className" placeholder="请输入班级名称"></el-input>
+        <!-- 批量删除按钮的内容 -->
+        <el-dialog title="批量删除学员" :visible.sync="multDelStudentDialogVisible" width="30%" :before-close="handleClose">
+            <span>您确定要删除所选班级吗？</span>
+            <span slot="footer">
+                <el-button @click="multDelStudentDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="multDelStudentDataSubmit()">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 编辑学员按钮的内容 -->
+        <el-dialog title="编辑学员" :visible.sync="editStudentDialogVisible" :before-close="handleClose">
+            <el-form :model="editStudentData" :rules="studentRules" ref="editStudentForm">
+                <el-form-item label="姓名" prop="studentName" label-position="left" :label-width="formLabelWidth">
+                    <el-input v-model="editStudentData.studentName" placeholder="请输入姓名"></el-input>
                 </el-form-item>
-                <el-form-item label="班级教室" label-position="left" :label-width="formLabelWidth">
-                    <el-input v-model="editStudentData.classRoom" placeholder="请填写班级教室"> </el-input>
+                <el-form-item label="学号" prop="studentID" label-position="left" :label-width="formLabelWidth">
+                    <el-input v-model="editStudentData.studentID" placeholder="请输入学号"> </el-input>
                 </el-form-item>
-                <el-form-item label="开课时间" label-position="left" :label-width="formLabelWidth">
-                    <el-date-picker v-model="editStudentData.openTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择开课时间"> </el-date-picker>
+                <el-form-item label="性别" prop="gender" label-position="left" :label-width="formLabelWidth" placeholder="请选择">
+                    <el-select v-model="editStudentData.gender">
+                        <el-option label="男" value="男"></el-option>
+                        <el-option label="女" value="女"></el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="结课时间" label-position="left" :label-width="formLabelWidth">
-                    <el-date-picker v-model="editStudentData.closeTime" type="date" value-format="yyyy-MM-dd" placeholder="请选择结课时间"> </el-date-picker>
+                <el-form-item label="手机号" prop="phoneNumber" label-position="left" :label-width="formLabelWidth">
+                    <el-input v-model="editStudentData.phoneNumber" placeholder="请输入手机号"></el-input>
                 </el-form-item>
-                <el-form-item label="班主任" label-position="left" :label-width="formLabelWidth" placeholder="请选择">
-                    <el-select v-model="editStudentData.classTeacher">
-                        <el-option label="班主任1" value="班主任1"></el-option>
-                        <el-option label="班主任2" value="班主任2"></el-option>
-                        <el-option label="班主任3" value="班主任3"></el-option>
+                <el-form-item label="最高学历" prop="highestEducationLevel" label-position="left" :label-width="formLabelWidth" placeholder="请选择">
+                    <el-select v-model="editStudentData.highestEducationLevel">
+                        <el-option label="大学" value="大学"></el-option>
+                        <el-option label="小学" value="小学"></el-option>
+                        <el-option label="文盲" value="文盲"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="所属班级" prop="className" label-position="left" :label-width="formLabelWidth" placeholder="请选择">
+                    <el-select v-model="editStudentData.className">
+                        <el-option label="教室01" value="教室01"></el-option>
+                        <el-option label="教室02" value="教室02"></el-option>
+                        <el-option label="教室03" value="教室03"></el-option>
                     </el-select>
                 </el-form-item>
             </el-form>
             <div slot="footer">
                 <el-button @click="editStudentDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="editStudentDataSubmit()">确 定</el-button>
+                <el-button type="primary" @click="editStudentDataSubmit('editStudentForm')">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -176,6 +195,7 @@ export default {
     data() {
         return {
             addStudentDialogVisible: false,
+            multDelStudentDialogVisible: false,
             editStudentDialogVisible: false,
             delStudentDialogVisible: false,
             formLabelWidth: "100px",
@@ -208,9 +228,6 @@ export default {
                     { min: 11, max: 11, message: "手机号码格式错误", trigger: "blur" },
                 ],
                 className: [{ required: true, message: "请选择", trigger: "change" }],
-                // openTime: [{ type: "date", required: true, message: "请选择开课时间", trigger: "change" }],
-                // closeTime: [{ type: "date", required: true, message: "请选择结课时间", trigger: "change" }],
-                // classTeacher: [{ required: true, message: "请选择", trigger: "change" }],
             },
             //用来绑定表单数据
             addStudentData: {
@@ -229,6 +246,7 @@ export default {
                 phoneNumber: "",
                 highestEducationLevel: "",
             },
+            multiDelTable: [],
             delStudentForm: {
                 index: -1,
             },
@@ -271,6 +289,16 @@ export default {
             this.currentPage = val;
             this.loadData();
         },
+        handleClose(done) {
+            this.$confirm("确认关闭？")
+                .then(() => {
+                    done();
+                })
+                .catch(() => {});
+        },
+        handleSelectionChange(val) {
+            this.multiDelTable = val;
+        },
         loadData() {
             // 根据当前页数和每页显示条目数获取数据，这里是示例数据，您需要根据实际情况调整
             this.showData = this.studentData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize);
@@ -278,14 +306,6 @@ export default {
         },
         indexMethod() {
             return (this.currentPage - 1) * this.pageSize + 1;
-        },
-        handleAddStudentClose(done) {
-            this.$confirm("确认关闭？")
-                .then(() => {
-                    //清空表单数据
-                    done();
-                })
-                .catch(() => {});
         },
         addStudentDataSubmit(addStudentForm) {
             this.$refs[addStudentForm].validate((valid) => {
@@ -327,6 +347,12 @@ export default {
             });
             // 关闭编辑对话框
             this.editStudentDialogVisible = false;
+        },
+        multDelStudentDataSubmit() {
+            // 向数据库中删除数据
+            // 关闭删除对话框
+            console.log(this.multiDelTable);
+            this.multDelStudentDialogVisible = false;
         },
         delStudentDataUpdate() {
             // 向数据库中删除数据
