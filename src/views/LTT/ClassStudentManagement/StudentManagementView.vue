@@ -206,12 +206,7 @@ export default {
                 studentName: "",
                 studentID: "",
                 className: "",
-                gender: "",
-                phoneNumber: "",
                 highestEducationLevel: "",
-                numberOfInfractions: -1,
-                pointsForDisciplinary: -1,
-                lastOperationTime: "",
             },
             studentRules: {
                 studentName: [
