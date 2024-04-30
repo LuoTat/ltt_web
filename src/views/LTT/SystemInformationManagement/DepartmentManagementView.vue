@@ -130,6 +130,7 @@
 
 <script>
 import axios from "axios";
+import { serverURL } from "../../../config/server/serverURL.js";
 
 export default {
     data() {
@@ -173,7 +174,7 @@ export default {
                     return false;
                 } else {
                     //发送数据到数据库
-                    axios.post("http://localhost:8080/dpts", this.addDptData).then((response) => {
+                    axios.post(`${serverURL}/dpts`, this.addDptData).then((response) => {
                         if (response.data.code == 1) {
                             this.$message({
                                 message: "添加成功",
@@ -207,7 +208,7 @@ export default {
 
         // 编辑部门区方法
         showEditDptDialog(id) {
-            axios.get(`http://localhost:8080/dpts/${id}`).then((response) => {
+            axios.get(`${serverURL}/dpts/${id}`).then((response) => {
                 const data = response.data.data;
                 Object.keys(this.editDptData).forEach((key) => {
                     if (key in data) {
@@ -223,7 +224,7 @@ export default {
                     return false;
                 } else {
                     //发送数据到数据库
-                    axios.put("http://localhost:8080/dpts", this.editDptData).then((response) => {
+                    axios.put(`${serverURL}/dpts`, this.editDptData).then((response) => {
                         if (response.data.code == 1) {
                             this.$message({
                                 message: "修改成功",
@@ -250,7 +251,7 @@ export default {
         },
         delDptDataSubmit() {
             // 向数据库中删除数据
-            axios.delete(`http://localhost:8080/dpts/${this.delDptDataId}`).then((response) => {
+            axios.delete(`${serverURL}/dpts/${this.delDptDataId}`).then((response) => {
                 if (response.data.code == 1) {
                     this.$message({
                         message: "删除成功",
@@ -270,7 +271,7 @@ export default {
 
         // 显示部门区方法
         loadDptData() {
-            axios.get("http://localhost:8080/dpts").then((response) => {
+            axios.get(`${serverURL}/dpts`).then((response) => {
                 this.showDptData = response.data.data;
             });
         },

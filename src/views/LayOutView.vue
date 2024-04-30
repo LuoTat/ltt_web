@@ -4,27 +4,37 @@
             <!-- 标题位置，加按钮 -->
             <el-header style="font-size: 40px; background-color: #eef1f6; display: grid; grid-template-columns: 1fr auto auto">
                 <div>LTT管理系统</div>
-                <el-button type="primary" @click="editPasswd()">修改密码</el-button>
-                <el-button type="primary" @click="logOut()">退出登录</el-button>
+                <el-button
+                    type="primary"
+                    @click="editPasswd()"
+                    >修改密码</el-button
+                >
+                <el-button
+                    type="primary"
+                    @click="logOut()"
+                    >退出登录</el-button
+                >
             </el-header>
 
             <el-container>
                 <!-- 侧边栏 -->
                 <el-aside width="200px">
-                    <el-menu router :default-openeds="['1', '2', '3']">
+                    <el-menu
+                        router
+                        :default-openeds="['1', '2', '3']">
                         <el-submenu index="1">
                             <template slot="title"><i class="el-icon-message"></i>班级学员管理</template>
-                            <el-menu-item index="/ClassStudentManagement/ClassManagement">班级管理 </el-menu-item>
-                            <el-menu-item index="/ClassStudentManagement/StudentManagement"> 学员管理 </el-menu-item>
+                            <el-menu-item :index="{ name: 'ClassManagement' }">班级管理 </el-menu-item>
+                            <el-menu-item :index="{ name: 'StudentManagement' }"> 学员管理 </el-menu-item>
                         </el-submenu>
                         <el-submenu index="2">
                             <template slot="title"><i class="el-icon-message"></i>系统信息管理</template>
-                            <el-menu-item index="/SystemInformationManagement/DepartmentManagement"> 部门管理 </el-menu-item>
-                            <el-menu-item index="/SystemInformationManagement/EmployeeManagement"> 员工管理 </el-menu-item>
+                            <el-menu-item :index="{ name: 'DepartmentManagement' }"> 部门管理 </el-menu-item>
+                            <el-menu-item :index="{ name: 'EmployeeManagement' }"> 员工管理 </el-menu-item>
                         </el-submenu>
                         <el-submenu index="3">
                             <template slot="title"><i class="el-icon-message"></i>数据统计管理</template>
-                            <el-menu-item index="/DataStatisticsManagement/EmployeeInformationStatistics"> 员工信息统计 </el-menu-item>
+                            <el-menu-item :index="{ name: 'EmployeeInformationStatistics' }"> 员工信息统计 </el-menu-item>
                         </el-submenu>
                     </el-menu>
                 </el-aside>

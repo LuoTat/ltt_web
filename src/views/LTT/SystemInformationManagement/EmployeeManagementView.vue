@@ -223,7 +223,7 @@
                     :label-width="formLabelWidth">
                     <el-upload
                         class="avatar-uploader"
-                        action="http://localhost:8080/upload"
+                        action="${serverURL}/upload"
                         name="image"
                         :show-file-list="false"
                         :on-success="addEmpHandleAvatarSuccess"
@@ -339,7 +339,7 @@
                     :label-width="formLabelWidth">
                     <el-upload
                         class="avatar-uploader"
-                        action="http://localhost:8080/upload"
+                        action="${serverURL}/upload"
                         name="image"
                         :show-file-list="false"
                         :on-success="editEmpHandleAvatarSuccess"
@@ -442,6 +442,9 @@
 
 <script>
 import axios from "axios";
+import { serverURL } from "../../../config/server/serverURL.js";
+import { genderOptions } from "../../../config/options/genderOptions.js";
+import { jobOptions } from "../../../config/options/jobOptions.js";
 
 export default {
     data() {
@@ -496,19 +499,10 @@ export default {
             },
 
             // 性别选择区数据
-            genderOptions: [
-                { label: "男", value: 1 },
-                { label: "女", value: 2 },
-            ],
+            genderOptions,
 
             // 职位选择区数据
-            jobOptions: [
-                { label: "班主任", value: 1 },
-                { label: "讲师", value: 2 },
-                { label: "学工主管", value: 3 },
-                { label: "研主管", value: 4 },
-                { label: "咨询师", value: 5 },
-            ],
+            jobOptions,
 
             // 查询员工区数据
             empSearchData: {
@@ -584,7 +578,7 @@ export default {
                 endDate = this.empSearchData.entryDate[1];
             }
             this.currentPage = 1; // 重置当前页数
-            axios.get(`http://localhost:8080/emps?name=${this.empSearchData.name}&gender=${this.empSearchData.gender}&begin=${beginDate}&end=${endDate}&currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
+            axios.get(`${serverURL}/emps?name=${this.empSearchData.name}&gender=${this.empSearchData.gender}&begin=${beginDate}&end=${endDate}&currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
                 this.showEmpData = response.data.data.rows;
                 this.totalPage = response.data.data.total;
             });
@@ -600,7 +594,7 @@ export default {
                     return false;
                 } else {
                     //发送数据到数据库
-                    axios.post("http://localhost:8080/emps", this.addEmpData).then((response) => {
+                    axios.post(`${serverURL}/emps`, this.addEmpData).then((response) => {
                         if (response.data.code == 1) {
                             this.$message({
                                 message: "添加成功",
@@ -637,7 +631,7 @@ export default {
             this.editEmpData.image = response.data;
         },
         showEditEmpDialog(id) {
-            axios.get(`http://localhost:8080/emps/${id}`).then((response) => {
+            axios.get(`${serverURL}/emps/${id}`).then((response) => {
                 const data = response.data.data;
                 Object.keys(this.editEmpData).forEach((key) => {
                     if (key in data) {
@@ -653,7 +647,7 @@ export default {
                     return false;
                 } else {
                     //发送数据到数据库
-                    axios.put("http://localhost:8080/emps", this.editEmpData).then((response) => {
+                    axios.put(`${serverURL}/emps`, this.editEmpData).then((response) => {
                         if (response.data.code == 1) {
                             this.$message({
                                 message: "修改成功",
@@ -680,7 +674,7 @@ export default {
         },
         delEmpDataSubmit() {
             // 向数据库中删除数据
-            axios.delete(`http://localhost:8080/emps/${this.delEmpDataId}`).then((response) => {
+            axios.delete(`${serverURL}/emps/${this.delEmpDataId}`).then((response) => {
                 if (response.data.code == 1) {
                     this.$message({
                         message: "删除成功",
@@ -702,7 +696,7 @@ export default {
             this.multiDelTable.forEach((item) => {
                 ids.push(item.id);
             });
-            axios.delete(`http://localhost:8080/emps/${ids}`).then((response) => {
+            axios.delete(`${serverURL}/emps/${ids}`).then((response) => {
                 if (response.data.code == 1) {
                     this.$message({
                         message: "批量删除成功",
@@ -722,7 +716,7 @@ export default {
         // 显示员工区方法
         loadEmpData() {
             // 根据当前页数和每页显示条目数获取数据,无条件查询
-            axios.get(`http://localhost:8080/emps?currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
+            axios.get(`${serverURL}/emps?currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
                 this.showEmpData = response.data.data.rows;
                 this.totalPage = response.data.data.total;
             });
@@ -731,7 +725,7 @@ export default {
     mounted() {
         this.loadEmpData();
         // 获取部门数据
-        axios.get("http://localhost:8080/dpts").then((response) => {
+        axios.get(`${serverURL}/dpts`).then((response) => {
             this.showDptData = response.data.data;
         });
     },

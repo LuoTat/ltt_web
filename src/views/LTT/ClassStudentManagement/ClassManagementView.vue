@@ -317,6 +317,7 @@
 
 <script>
 import axios from "axios";
+import { serverURL } from "../../../config/server/serverURL.js";
 
 export default {
     data() {
@@ -425,7 +426,7 @@ export default {
         loadTeacherName(teacher) {
             if (!this.loadingTeacherNames[teacher]) {
                 this.loadingTeacherNames[teacher] = true;
-                axios.get(`http://localhost:8080/emps/${teacher}`).then((response) => {
+                axios.get(`${serverURL}/emps/${teacher}`).then((response) => {
                     this.$set(this.teacherNames, teacher, response.data.data.name);
                     this.loadingTeacherNames[teacher] = false;
                 });
@@ -441,7 +442,7 @@ export default {
                 endDate = this.clsSearchData.closeTime[1];
             }
             this.currentPage = 1; // 重置当前页数
-            axios.get(`http://localhost:8080/clss?name=${this.clsSearchData.name}&begin=${beginDate}&end=${endDate}&currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
+            axios.get(`${serverURL}/clss?name=${this.clsSearchData.name}&begin=${beginDate}&end=${endDate}&currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
                 this.showClsData = response.data.data.rows;
                 this.totalPage = response.data.data.total;
             });
@@ -454,7 +455,7 @@ export default {
                     return false;
                 } else {
                     //发送数据到数据库
-                    axios.post("http://localhost:8080/clss", this.addClsData).then((response) => {
+                    axios.post(`${serverURL}/clss`, this.addClsData).then((response) => {
                         if (response.data.code == 1) {
                             this.$message({
                                 message: "添加成功",
@@ -488,7 +489,7 @@ export default {
 
         // 编辑班级区方法
         showEditClsDialog(id) {
-            axios.get(`http://localhost:8080/clss/${id}`).then((response) => {
+            axios.get(`${serverURL}/clss/${id}`).then((response) => {
                 const data = response.data.data;
                 Object.keys(this.editClsData).forEach((key) => {
                     if (key in data) {
@@ -504,7 +505,7 @@ export default {
                     return false;
                 } else {
                     //发送数据到数据库
-                    axios.put("http://localhost:8080/clss", this.editClsData).then((response) => {
+                    axios.put(`${serverURL}/clss`, this.editClsData).then((response) => {
                         if (response.data.code == 1) {
                             this.$message({
                                 message: "修改成功",
@@ -531,7 +532,7 @@ export default {
         },
         delClsDataSubmit() {
             // 向数据库中删除数据
-            axios.delete(`http://localhost:8080/clss/${this.delClsDataId}`).then((response) => {
+            axios.delete(`${serverURL}/clss/${this.delClsDataId}`).then((response) => {
                 if (response.data.code == 1) {
                     this.$message({
                         message: "删除成功",
@@ -552,7 +553,7 @@ export default {
         // 显示班级区方法
         loadClsData() {
             // 根据当前页数和每页显示条目数获取数据,无条件查询
-            axios.get(`http://localhost:8080/clss?currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
+            axios.get(`${serverURL}/clss?currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
                 this.showClsData = response.data.data.rows;
                 this.totalPage = response.data.data.total;
             });
@@ -560,7 +561,7 @@ export default {
     },
     mounted() {
         this.loadClsData();
-        axios.get("http://localhost:8080/emps?currentPage=1&pageSize=9999").then((response) => {
+        axios.get(`${serverURL}/emps?currentPage=1&pageSize=9999`).then((response) => {
             this.showTeacherData = response.data.data.rows;
         });
     },

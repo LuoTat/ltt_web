@@ -459,6 +459,9 @@
 
 <script>
 import axios from "axios";
+import { serverURL } from "../../../config/server/serverURL.js";
+import { genderOptions } from "../../../config/options/genderOptions.js";
+import { educationLevelOptions } from "../../../config/options/educationLevelOptions.js";
 
 export default {
     data() {
@@ -530,20 +533,10 @@ export default {
             },
 
             // 性别选择区数据
-            genderOptions: [
-                { label: "男", value: 1 },
-                { label: "女", value: 2 },
-            ],
+            genderOptions,
 
             // 学历选择区数据
-            educationLevelOptions: [
-                { label: "初中", value: 1 },
-                { label: "高中", value: 2 },
-                { label: "大专", value: 3 },
-                { label: "本科", value: 4 },
-                { label: "硕士", value: 5 },
-                { label: "博士", value: 6 },
-            ],
+            educationLevelOptions,
 
             // 查询学生区数据
             stuSearchData: {
@@ -582,9 +575,6 @@ export default {
             showClsData: [], // 用于存储班级数据
             classNames: {}, // 用于存储班级 ID 和名称的映射
             loadingClassNames: {}, // 用于跟踪哪些班级 ID 的请求正在进行
-            // loading: false, // 是否正在加载数据
-            // showClsPage: 1, // 当前的页数
-            // currentQuery: "", // 当前的查询字符串
         };
     },
     methods: {
@@ -612,7 +602,7 @@ export default {
         loadClassName(classId) {
             if (!this.loadingClassNames[classId]) {
                 this.loadingClassNames[classId] = true;
-                axios.get(`http://localhost:8080/clss/${classId}`).then((response) => {
+                axios.get(`${serverURL}/clss/${classId}`).then((response) => {
                     this.$set(this.classNames, classId, response.data.data.name);
                     this.loadingClassNames[classId] = false;
                 });
@@ -625,7 +615,7 @@ export default {
         // 查询学生区方法
         searchStu() {
             this.currentPage = 1; // 重置当前页数
-            axios.get(`http://localhost:8080/stus?name=${this.stuSearchData.name}&studentId=${this.stuSearchData.studentId}&educationLevel=${this.stuSearchData.educationLevel}&classId=${this.stuSearchData.classId}&currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
+            axios.get(`${serverURL}/stus?name=${this.stuSearchData.name}&studentId=${this.stuSearchData.studentId}&educationLevel=${this.stuSearchData.educationLevel}&classId=${this.stuSearchData.classId}&currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
                 this.showStuData = response.data.data.rows;
                 this.totalPage = response.data.data.total;
             });
@@ -638,7 +628,7 @@ export default {
                     return false;
                 } else {
                     //发送数据到数据库
-                    axios.post("http://localhost:8080/stus", this.addStuData).then((response) => {
+                    axios.post(`${serverURL}/stus`, this.addStuData).then((response) => {
                         if (response.data.code == 1) {
                             this.$message({
                                 message: "添加成功",
@@ -672,7 +662,7 @@ export default {
 
         // 编辑学生区方法
         showEditStuDialog(id) {
-            axios.get(`http://localhost:8080/stus/${id}`).then((response) => {
+            axios.get(`${serverURL}/stus/${id}`).then((response) => {
                 const data = response.data.data;
                 Object.keys(this.editStuData).forEach((key) => {
                     if (key in data) {
@@ -693,7 +683,7 @@ export default {
                 } else {
                     //发送数据到数据库
                     console.log(this.editStuData);
-                    axios.put("http://localhost:8080/stus", this.editStuData).then((response) => {
+                    axios.put(`${serverURL}/stus`, this.editStuData).then((response) => {
                         if (response.data.code == 1) {
                             this.$message({
                                 message: "修改成功",
@@ -720,7 +710,7 @@ export default {
                     return false;
                 } else {
                     //发送数据到数据库
-                    axios.put("http://localhost:8080/stus", this.editStuInfractionData).then((response) => {
+                    axios.put(`${serverURL}/stus`, this.editStuInfractionData).then((response) => {
                         if (response.data.code == 1) {
                             this.$message({
                                 message: "修改成功",
@@ -749,7 +739,7 @@ export default {
         },
         delStuDataSubmit() {
             // 向数据库中删除数据
-            axios.delete(`http://localhost:8080/stus/${this.delStuDataId}`).then((response) => {
+            axios.delete(`${serverURL}/stus/${this.delStuDataId}`).then((response) => {
                 if (response.data.code == 1) {
                     this.$message({
                         message: "删除成功",
@@ -771,7 +761,7 @@ export default {
             this.multiDelTable.forEach((item) => {
                 ids.push(item.id);
             });
-            axios.delete(`http://localhost:8080/stus/${ids}`).then((response) => {
+            axios.delete(`${serverURL}/stus/${ids}`).then((response) => {
                 if (response.data.code == 1) {
                     this.$message({
                         message: "批量删除成功",
@@ -791,49 +781,15 @@ export default {
         // 显示学生区方法
         loadStuData() {
             // 根据当前页数和每页显示条目数获取数据,无条件查询
-            axios.get(`http://localhost:8080/stus?currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
+            axios.get(`${serverURL}/stus?currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
                 this.showStuData = response.data.data.rows;
                 this.totalPage = response.data.data.total;
             });
         },
-
-        // // 显示班级区方法
-        // filterMethod: _.debounce(function (query) {
-        //     this.currentQuery = query;
-        //     if (query) {
-        //         this.page = 1;
-        //         this.loadMoreCls(query);
-        //     } else {
-        //         this.clsData = [];
-        //     }
-        // }, 500),
-        // // 滚动加载
-        // loadMoreCls(query) {
-        //     this.loading = true;
-        //     axios.get(`http://localhost:8080/clss?name=${query}&currentPage=${this.showClsPage}`).then((response) => {
-        //         this.showClsData = this.showClsData.concat(response.data.data.rows);
-        //         this.loading = false;
-        //     });
-        // },
-        // handleScroll(event) {
-        //     // 如果滚动到了底部，并且当前没有正在加载数据
-        //     if (event.target.scrollTop + event.target.clientHeight >= event.target.scrollHeight && !this.loading) {
-        //         this.showClsPage++;
-        //         this.loadMoreCls(this.currentQuery);
-        //     }
-        // },
-        // handleVisibleChange(visible) {
-        //     if (visible) {
-        //         this.$nextTick(() => {
-        //             const dropdown = this.$refs.select.$refs.popper;
-        //             dropdown.addEventListener("scroll", this.handleScroll);
-        //         });
-        //     }
-        // },
     },
     mounted() {
         this.loadStuData();
-        axios.get("http://localhost:8080/clss?currentPage=1&pageSize=9999").then((response) => {
+        axios.get(`${serverURL}/clss?currentPage=1&pageSize=9999`).then((response) => {
             this.showClsData = response.data.data.rows;
         });
     },
