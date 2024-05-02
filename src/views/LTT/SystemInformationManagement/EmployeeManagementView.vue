@@ -223,7 +223,7 @@
                     :label-width="formLabelWidth">
                     <el-upload
                         class="avatar-uploader"
-                        action="${serverURL}/upload"
+                        :action="uploadURL"
                         name="image"
                         :show-file-list="false"
                         :on-success="addEmpHandleAvatarSuccess"
@@ -339,7 +339,7 @@
                     :label-width="formLabelWidth">
                     <el-upload
                         class="avatar-uploader"
-                        action="${serverURL}/upload"
+                        :action="uploadURL"
                         name="image"
                         :show-file-list="false"
                         :on-success="editEmpHandleAvatarSuccess"
@@ -449,6 +449,9 @@ import { jobOptions } from "../../../config/options/jobOptions.js";
 export default {
     data() {
         return {
+            // 上传图片地址
+            uploadURL: `${serverURL}/upload`,
+
             // 对话框控制区
             addEmpDialogVisible: false,
             editEmpDialogVisible: false,
@@ -512,7 +515,9 @@ export default {
             },
 
             // 增加员工区数据
-            addEmpData: {},
+            addEmpData: {
+                image: "",
+            },
 
             // 编辑员工区数据
             editEmpData: {
@@ -587,6 +592,7 @@ export default {
         // 增加员工区方法
         addEmpHandleAvatarSuccess(response) {
             this.addEmpData.image = response.data;
+            console.log(this.addEmpData);
         },
         addEmpDataSubmit() {
             this.$refs.addEmpForm.validate((valid) => {
