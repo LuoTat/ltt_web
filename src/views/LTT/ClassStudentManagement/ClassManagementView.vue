@@ -241,10 +241,7 @@
                     prop="room"
                     label-position="left"
                     :label-width="formLabelWidth">
-                    <el-input
-                        v-model="editClsData.room"
-                        placeholder="请填写班级教室">
-                    </el-input>
+                    <el-input v-model="editClsData.room"> </el-input>
                 </el-form-item>
                 <el-form-item
                     label="开课时间"
@@ -254,8 +251,7 @@
                     <el-date-picker
                         v-model="editClsData.openTime"
                         type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择开课时间">
+                        value-format="yyyy-MM-dd">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item
@@ -266,8 +262,7 @@
                     <el-date-picker
                         v-model="editClsData.closeTime"
                         type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="请选择结课时间">
+                        value-format="yyyy-MM-dd">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item
@@ -275,9 +270,7 @@
                     prop="teacher"
                     label-position="left"
                     :label-width="formLabelWidth">
-                    <el-select
-                        v-model="editClsData.teacher"
-                        placeholder="请选择">
+                    <el-select v-model="editClsData.teacher">
                         <el-option
                             v-for="item in showTeacherData"
                             :key="item.id"
@@ -318,6 +311,7 @@
 <script>
 import axios from "axios";
 import { serverURL } from "../../../config/server/serverURL.js";
+import { showMessage } from "../../../Utils/showMessage.js";
 
 export default {
     data() {
@@ -456,20 +450,11 @@ export default {
                 } else {
                     //发送数据到数据库
                     axios.post(`${serverURL}/clss`, this.addClsData).then((response) => {
-                        if (response.data.code == 1) {
-                            this.$message({
-                                message: "添加成功",
-                                type: "success",
-                            });
+                        showMessage(response, this, () => {
                             this.$refs.addClsForm.resetFields(); //清空表单数据
                             this.addClsDialogVisible = false;
                             this.loadClsData();
-                        } else {
-                            this.$message({
-                                message: "当前班级名称已存在，请重新输入",
-                                type: "error",
-                            });
-                        }
+                        });
                     });
                 }
             });
@@ -506,20 +491,11 @@ export default {
                 } else {
                     //发送数据到数据库
                     axios.put(`${serverURL}/clss`, this.editClsData).then((response) => {
-                        if (response.data.code == 1) {
-                            this.$message({
-                                message: "修改成功",
-                                type: "success",
-                            });
+                        showMessage(response, this, () => {
                             this.$refs.editClsForm.resetFields(); //清空表单数据
                             this.editClsDialogVisible = false;
                             this.loadClsData();
-                        } else {
-                            this.$message({
-                                message: "当前班级名称已存在，请重新输入",
-                                type: "error",
-                            });
-                        }
+                        });
                     });
                 }
             });
@@ -533,18 +509,9 @@ export default {
         delClsDataSubmit() {
             // 向数据库中删除数据
             axios.delete(`${serverURL}/clss/${this.delClsDataId}`).then((response) => {
-                if (response.data.code == 1) {
-                    this.$message({
-                        message: "删除成功",
-                        type: "success",
-                    });
+                showMessage(response, this, () => {
                     this.loadClsData();
-                } else {
-                    this.$message({
-                        message: "删除失败",
-                        type: "error",
-                    });
-                }
+                });
             });
             // 关闭删除对话框
             this.delClsDialogVisible = false;

@@ -101,7 +101,7 @@
             <el-table-column
                 prop="studentId"
                 label="学号"
-                min-width="100px">
+                min-width="110px">
             </el-table-column>
             <el-table-column
                 prop="classId"
@@ -118,7 +118,7 @@
             <el-table-column
                 prop="phoneNumber"
                 label="手机号"
-                min-width="100px">
+                min-width="120px">
             </el-table-column>
             <el-table-column
                 prop="educationLevel"
@@ -139,7 +139,7 @@
             <el-table-column
                 prop="updateTime"
                 label="最后操作时间"
-                min-width="140px">
+                min-width="160px">
             </el-table-column>
             <el-table-column
                 label="操作"
@@ -336,8 +336,7 @@
                     label="性别"
                     prop="gender"
                     label-position="left"
-                    :label-width="formLabelWidth"
-                    placeholder="请选择">
+                    :label-width="formLabelWidth">
                     <el-select v-model="editStuData.gender">
                         <el-option
                             v-for="item in genderOptions"
@@ -359,8 +358,7 @@
                     label="最高学历"
                     prop="educationLevel"
                     label-position="left"
-                    :label-width="formLabelWidth"
-                    placeholder="请选择">
+                    :label-width="formLabelWidth">
                     <el-select v-model="editStuData.educationLevel">
                         <el-option
                             v-for="item in educationLevelOptions"
@@ -373,8 +371,7 @@
                     label="所属班级"
                     prop="classId"
                     label-position="left"
-                    :label-width="formLabelWidth"
-                    placeholder="请选择">
+                    :label-width="formLabelWidth">
                     <el-select v-model="editStuData.classId">
                         <el-option
                             v-for="item in showClsData"
@@ -462,6 +459,7 @@ import axios from "axios";
 import { serverURL } from "../../../config/server/serverURL.js";
 import { genderOptions } from "../../../config/options/genderOptions.js";
 import { educationLevelOptions } from "../../../config/options/educationLevelOptions.js";
+import { showMessage } from "../../../Utils/showMessage.js";
 
 export default {
     data() {
@@ -629,20 +627,11 @@ export default {
                 } else {
                     //发送数据到数据库
                     axios.post(`${serverURL}/stus`, this.addStuData).then((response) => {
-                        if (response.data.code == 1) {
-                            this.$message({
-                                message: "添加成功",
-                                type: "success",
-                            });
+                        showMessage(response, this, () => {
                             this.$refs.addStuForm.resetFields(); //清空表单数据
                             this.addStuDialogVisible = false;
                             this.loadStuData();
-                        } else {
-                            this.$message({
-                                message: "当前学号或手机号已存在，请重新输入",
-                                type: "error",
-                            });
-                        }
+                        });
                     });
                 }
             });
@@ -682,22 +671,12 @@ export default {
                     return false;
                 } else {
                     //发送数据到数据库
-                    console.log(this.editStuData);
                     axios.put(`${serverURL}/stus`, this.editStuData).then((response) => {
-                        if (response.data.code == 1) {
-                            this.$message({
-                                message: "修改成功",
-                                type: "success",
-                            });
+                        showMessage(response, this, () => {
                             this.$refs.editStuForm.resetFields(); //清空表单数据
                             this.editStuDialogVisible = false;
                             this.loadStuData();
-                        } else {
-                            this.$message({
-                                message: "当前用户名已存在，请重新输入",
-                                type: "error",
-                            });
-                        }
+                        });
                     });
                 }
             });
@@ -711,20 +690,11 @@ export default {
                 } else {
                     //发送数据到数据库
                     axios.put(`${serverURL}/stus`, this.editStuInfractionData).then((response) => {
-                        if (response.data.code == 1) {
-                            this.$message({
-                                message: "修改成功",
-                                type: "success",
-                            });
+                        showMessage(response, this, () => {
                             this.$refs.editStuInfractionForm.resetFields(); //清空表单数据
                             this.editStuInfractionDialogVisible = false;
                             this.loadStuData();
-                        } else {
-                            this.$message({
-                                message: "出现传输错误，请重新输入",
-                                type: "error",
-                            });
-                        }
+                        });
                     });
                 }
             });
@@ -740,18 +710,9 @@ export default {
         delStuDataSubmit() {
             // 向数据库中删除数据
             axios.delete(`${serverURL}/stus/${this.delStuDataId}`).then((response) => {
-                if (response.data.code == 1) {
-                    this.$message({
-                        message: "删除成功",
-                        type: "success",
-                    });
+                showMessage(response, this, () => {
                     this.loadStuData();
-                } else {
-                    this.$message({
-                        message: "删除失败",
-                        type: "error",
-                    });
-                }
+                });
             });
             // 关闭删除对话框
             this.delStuDialogVisible = false;
@@ -762,18 +723,9 @@ export default {
                 ids.push(item.id);
             });
             axios.delete(`${serverURL}/stus/${ids}`).then((response) => {
-                if (response.data.code == 1) {
-                    this.$message({
-                        message: "批量删除成功",
-                        type: "success",
-                    });
+                showMessage(response, this, () => {
                     this.loadStuData();
-                } else {
-                    this.$message({
-                        message: "批量删除失败",
-                        type: "error",
-                    });
-                }
+                });
             });
             this.multDelStuDialogVisible = false;
         },

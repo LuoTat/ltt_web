@@ -92,8 +92,7 @@
                 <template slot-scope="scope">
                     <img
                         :src="scope.row.image"
-                        width="100px"
-                        height="70px" />
+                        style="width: 50%; object-fit: contain" />
                 </template>
             </el-table-column>
             <el-table-column
@@ -110,7 +109,7 @@
             <el-table-column
                 prop="updateTime"
                 label="最后操作时间"
-                min-width="120px">
+                min-width="160px">
             </el-table-column>
             <el-table-column
                 label="操作"
@@ -445,6 +444,7 @@ import axios from "axios";
 import { serverURL } from "../../../config/server/serverURL.js";
 import { genderOptions } from "../../../config/options/genderOptions.js";
 import { jobOptions } from "../../../config/options/jobOptions.js";
+import { showMessage } from "../../../Utils/showMessage.js";
 
 export default {
     data() {
@@ -601,20 +601,11 @@ export default {
                 } else {
                     //发送数据到数据库
                     axios.post(`${serverURL}/emps`, this.addEmpData).then((response) => {
-                        if (response.data.code == 1) {
-                            this.$message({
-                                message: "添加成功",
-                                type: "success",
-                            });
+                        showMessage(response, this, () => {
                             this.$refs.addEmpForm.resetFields(); //清空表单数据
                             this.addEmpDialogVisible = false;
                             this.loadEmpData();
-                        } else {
-                            this.$message({
-                                message: "当前用户名已存在，请重新输入",
-                                type: "error",
-                            });
-                        }
+                        });
                     });
                 }
             });
@@ -654,20 +645,11 @@ export default {
                 } else {
                     //发送数据到数据库
                     axios.put(`${serverURL}/emps`, this.editEmpData).then((response) => {
-                        if (response.data.code == 1) {
-                            this.$message({
-                                message: "修改成功",
-                                type: "success",
-                            });
+                        showMessage(response, this, () => {
                             this.$refs.editEmpForm.resetFields(); //清空表单数据
                             this.editEmpDialogVisible = false;
                             this.loadEmpData();
-                        } else {
-                            this.$message({
-                                message: "当前用户名已存在，请重新输入",
-                                type: "error",
-                            });
-                        }
+                        });
                     });
                 }
             });
@@ -681,18 +663,9 @@ export default {
         delEmpDataSubmit() {
             // 向数据库中删除数据
             axios.delete(`${serverURL}/emps/${this.delEmpDataId}`).then((response) => {
-                if (response.data.code == 1) {
-                    this.$message({
-                        message: "删除成功",
-                        type: "success",
-                    });
+                showMessage(response, this, () => {
                     this.loadEmpData();
-                } else {
-                    this.$message({
-                        message: "删除失败",
-                        type: "error",
-                    });
-                }
+                });
             });
             // 关闭删除对话框
             this.delEmpDialogVisible = false;
@@ -703,18 +676,9 @@ export default {
                 ids.push(item.id);
             });
             axios.delete(`${serverURL}/emps/${ids}`).then((response) => {
-                if (response.data.code == 1) {
-                    this.$message({
-                        message: "批量删除成功",
-                        type: "success",
-                    });
+                showMessage(response, this, () => {
                     this.loadEmpData();
-                } else {
-                    this.$message({
-                        message: "批量删除失败",
-                        type: "error",
-                    });
-                }
+                });
             });
             this.multDelEmpDialogVisible = false;
         },
@@ -759,8 +723,11 @@ export default {
     text-align: center;
 }
 .avatar {
-    width: 178px;
-    height: 178px;
+    max-width: 178px;
+    max-height: 178px;
+    width: auto;
+    height: auto;
     display: block;
+    object-fit: contain;
 }
 </style>

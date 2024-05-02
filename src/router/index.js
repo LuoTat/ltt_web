@@ -11,18 +11,18 @@ const routes = [
     },
     // 登录界面
     {
-        path: "/Login",
+        path: "/login",
         name: "Login",
         component: () => import("../views/LoginView.vue"),
     },
     // 主界面
     {
-        path: "/Main",
+        path: "/main",
         name: "Main",
         component: () => import("../views/LayOutView.vue"),
         children: [
             {
-                path: "/Home",
+                path: "/home",
                 name: "Home",
                 component: () => import("../views/HomeView.vue"),
             },

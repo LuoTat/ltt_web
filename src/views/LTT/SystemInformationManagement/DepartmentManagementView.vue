@@ -131,6 +131,7 @@
 <script>
 import axios from "axios";
 import { serverURL } from "../../../config/server/serverURL.js";
+import { showMessage } from "../../../Utils/showMessage.js";
 
 export default {
     data() {
@@ -175,20 +176,11 @@ export default {
                 } else {
                     //发送数据到数据库
                     axios.post(`${serverURL}/dpts`, this.addDptData).then((response) => {
-                        if (response.data.code == 1) {
-                            this.$message({
-                                message: "添加成功",
-                                type: "success",
-                            });
+                        showMessage(response, this, () => {
                             this.$refs.addDptForm.resetFields(); //清空表单数据
                             this.addDptDialogVisible = false;
                             this.loadDptData();
-                        } else {
-                            this.$message({
-                                message: "当前部门名已存在，请重新输入",
-                                type: "error",
-                            });
-                        }
+                        });
                     });
                 }
             });
@@ -225,20 +217,11 @@ export default {
                 } else {
                     //发送数据到数据库
                     axios.put(`${serverURL}/dpts`, this.editDptData).then((response) => {
-                        if (response.data.code == 1) {
-                            this.$message({
-                                message: "修改成功",
-                                type: "success",
-                            });
+                        showMessage(response, this, () => {
                             this.$refs.editDptForm.resetFields(); //清空表单数据
                             this.editDptDialogVisible = false;
                             this.loadDptData();
-                        } else {
-                            this.$message({
-                                message: "当前部门名已存在，请重新输入",
-                                type: "error",
-                            });
-                        }
+                        });
                     });
                 }
             });
@@ -252,18 +235,9 @@ export default {
         delDptDataSubmit() {
             // 向数据库中删除数据
             axios.delete(`${serverURL}/dpts/${this.delDptDataId}`).then((response) => {
-                if (response.data.code == 1) {
-                    this.$message({
-                        message: "删除成功",
-                        type: "success",
-                    });
+                showMessage(response, this, () => {
                     this.loadDptData();
-                } else {
-                    this.$message({
-                        message: "删除失败",
-                        type: "error",
-                    });
-                }
+                });
             });
             // 关闭删除对话框
             this.delDptDialogVisible = false;
