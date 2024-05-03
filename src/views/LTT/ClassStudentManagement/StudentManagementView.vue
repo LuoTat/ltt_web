@@ -11,7 +11,8 @@
                             v-model="stuSearchData.name"
                             clearable
                             placeholder="请输入学员名称"
-                            style="width: 155px"></el-input>
+                            style="width: 155px">
+                        </el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="5">
@@ -35,7 +36,8 @@
                                 v-for="item in educationLevelOptions"
                                 :key="item.value"
                                 :label="item.label"
-                                :value="item.value"></el-option>
+                                :value="item.value">
+                            </el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -50,7 +52,8 @@
                                 v-for="item in showClsData"
                                 :key="item.id"
                                 :label="item.name"
-                                :value="item.id"></el-option>
+                                :value="item.id">
+                            </el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -78,6 +81,7 @@
             <el-button
                 type="primary"
                 @click="multdelStuDialogVisible = true"
+                :disabled="this.multiDelTable.length === 0"
                 >- 批量删除</el-button
             >
         </div>
@@ -249,7 +253,8 @@
                             v-for="item in genderOptions"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value"></el-option>
+                            :value="item.value">
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item
@@ -274,7 +279,8 @@
                             v-for="item in educationLevelOptions"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value"></el-option>
+                            :value="item.value">
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item
@@ -342,7 +348,8 @@
                             v-for="item in genderOptions"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value"></el-option>
+                            :value="item.value">
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item
@@ -364,7 +371,8 @@
                             v-for="item in educationLevelOptions"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value"></el-option>
+                            :value="item.value">
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item
@@ -377,7 +385,8 @@
                             v-for="item in showClsData"
                             :key="item.id"
                             :label="item.name"
-                            :value="item.id"></el-option>
+                            :value="item.id">
+                        </el-option>
                     </el-select>
                 </el-form-item>
             </el-form>

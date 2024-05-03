@@ -65,6 +65,7 @@
             <el-button
                 type="primary"
                 @click="multDelEmpDialogVisible = true"
+                :disabled="this.multiDelTable.length === 0"
                 >- 批量删除</el-button
             >
         </div>

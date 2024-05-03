@@ -11,10 +11,19 @@
 
 <script>
 import axios from "axios";
-import * as echarts from "echarts";
 import { serverURL } from "../../../config/server/serverURL.js";
 import { genderOptions } from "../../../config/options/genderOptions.js";
 import { jobOptions } from "../../../config/options/jobOptions.js";
+
+import * as echarts from "echarts/core";
+import { TooltipComponent, LegendComponent } from "echarts/components";
+import { PieChart } from "echarts/charts";
+import { LabelLayout } from "echarts/features";
+import { CanvasRenderer } from "echarts/renderers";
+import { GridComponent } from "echarts/components";
+import { BarChart } from "echarts/charts";
+echarts.use([GridComponent, BarChart]);
+echarts.use([TooltipComponent, LegendComponent, PieChart, CanvasRenderer, LabelLayout]);
 
 export default {
     data() {

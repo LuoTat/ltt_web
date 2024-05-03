@@ -82,8 +82,9 @@ export default {
         LoginEmpSubmit() {
             axios.post(`${serverURL}/login`, this.loginEmpData).then((response) => {
                 showMessage(response, this, () => {
-                    this.$refs.loginEmpForm.resetFields(); //清空表单数据
                     sessionStorage.setItem("jwtToken", response.data.data);
+                    sessionStorage.setItem("username", this.loginEmpData.username);
+                    this.$refs.loginEmpForm.resetFields(); //清空表单数据
                     this.$router.push({ name: "Home" });
                 });
             });

@@ -11,7 +11,8 @@
                             v-model="clsSearchData.name"
                             clearable
                             placeholder="请输入班级名称"
-                            style="width: 155px"></el-input>
+                            style="width: 155px">
+                        </el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
@@ -32,8 +33,8 @@
                         <el-button
                             type="primary"
                             @click="searchCls"
-                            >查 询</el-button
-                        >
+                            >查 询
+                        </el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -205,7 +206,8 @@
                             v-for="item in showTeacherData"
                             :key="item.id"
                             :label="item.name"
-                            :value="item.id"></el-option>
+                            :value="item.id">
+                        </el-option>
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -275,7 +277,8 @@
                             v-for="item in showTeacherData"
                             :key="item.id"
                             :label="item.name"
-                            :value="item.id"></el-option>
+                            :value="item.id">
+                        </el-option>
                     </el-select>
                 </el-form-item>
             </el-form>

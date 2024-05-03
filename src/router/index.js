@@ -7,7 +7,7 @@ const routes = [
     // 重定向
     {
         path: "/",
-        redirect: "/Login",
+        redirect: "/login",
     },
     // 登录界面
     {
