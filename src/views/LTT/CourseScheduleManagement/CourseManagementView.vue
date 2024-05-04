@@ -1,16 +1,16 @@
 <template>
     <!-- 右侧主界面 -->
     <el-main>
-        班级管理
+        课程管理
         <!-- 查询栏 -->
-        <el-form :model="clsSearchData">
+        <el-form :model="crsSearchData">
             <el-row>
                 <el-col :span="6">
-                    <el-form-item label="班级名称">
+                    <el-form-item label="课程名称">
                         <el-input
-                            v-model="clsSearchData.name"
+                            v-model="crsSearchData.name"
                             clearable
-                            placeholder="请输入班级名称"
+                            placeholder="请输入课程名称"
                             style="width: 155px">
                         </el-input>
                     </el-form-item>
@@ -18,7 +18,7 @@
                 <el-col :span="10">
                     <el-form-item label="结课时间">
                         <el-date-picker
-                            v-model="clsSearchData.closeTime"
+                            v-model="crsSearchData.closeTime"
                             type="daterange"
                             value-format="yyyy-MM-dd"
                             range-separator="至"
@@ -33,7 +33,7 @@
                     <el-form-item>
                         <el-button
                             type="primary"
-                            @click="searchCls"
+                            @click="searchCrs"
                             >查 询
                         </el-button>
                     </el-form-item>
@@ -41,16 +41,16 @@
             </el-row>
         </el-form>
 
-        <!-- 新增班级按钮 -->
+        <!-- 新增课程按钮 -->
         <el-button
             type="primary"
-            @click="addClsDialogVisible = true"
-            >+ 新增班级</el-button
+            @click="addCrsDialogVisible = true"
+            >+ 新增课程</el-button
         >
 
         <!-- 表格 -->
 
-        <el-table :data="showClsData">
+        <el-table :data="showCrsData">
             <el-table-column
                 type="index"
                 label="序号"
@@ -59,12 +59,7 @@
             </el-table-column>
             <el-table-column
                 prop="name"
-                label="班级名称"
-                min-width="100px">
-            </el-table-column>
-            <el-table-column
-                prop="room"
-                label="班级教室"
+                label="课程名称"
                 min-width="100px">
             </el-table-column>
             <el-table-column
@@ -78,27 +73,27 @@
                 min-width="100px">
             </el-table-column>
             <el-table-column
-                prop="teacher"
-                label="班主任"
+                prop="classId"
+                label="上课教室"
                 min-width="100px"
-                :formatter="teacherNameFormatter">
+                :formatter="classIdNameFormatter">
             </el-table-column>
             <el-table-column
                 label="操作"
                 min-width="120px"
                 align="right">
                 <template slot-scope="scope">
-                    <!-- 编辑班级按钮 -->
+                    <!-- 编辑课程按钮 -->
                     <el-button
                         type="primary"
-                        @click="showEditClsDialog(scope.row.id)"
+                        @click="showEditCrsDialog(scope.row.id)"
                         size="mini"
                         >编 辑</el-button
                     >
-                    <!-- 删除班级按钮 -->
+                    <!-- 删除课程按钮 -->
                     <el-button
                         type="danger"
-                        @click="showDelClsDialog(scope.row.id)"
+                        @click="showDelCrsDialog(scope.row.id)"
                         size="mini"
                         >删 除</el-button
                     >
@@ -143,33 +138,23 @@
 
         <!-- 下面是当前页面所有的对话框 -->
 
-        <!-- 新增班级按钮的内容 -->
+        <!-- 新增课程按钮的内容 -->
         <el-dialog
-            title="新增班级"
-            :visible.sync="addClsDialogVisible"
-            :before-close="addClsHandleClose">
+            title="新增课程"
+            :visible.sync="addCrsDialogVisible"
+            :before-close="addCrsHandleClose">
             <el-form
-                :model="addClsData"
-                :rules="clsRules"
-                ref="addClsForm">
+                :model="addCrsData"
+                :rules="crsRules"
+                ref="addCrsForm">
                 <el-form-item
-                    label="班级名称"
+                    label="课程名称"
                     prop="name"
                     label-position="left"
                     :label-width="formLabelWidth">
                     <el-input
-                        v-model="addClsData.name"
-                        placeholder="请输入班级名称,如:2024第01期10班"></el-input>
-                </el-form-item>
-                <el-form-item
-                    label="班级教室"
-                    prop="room"
-                    label-position="left"
-                    :label-width="formLabelWidth">
-                    <el-input
-                        v-model="addClsData.room"
-                        placeholder="请填写班级教室">
-                    </el-input>
+                        v-model="addCrsData.name"
+                        placeholder="请输入课程名称,如:2024第01期10班"></el-input>
                 </el-form-item>
                 <el-form-item
                     label="开课时间"
@@ -177,7 +162,7 @@
                     label-position="left"
                     :label-width="formLabelWidth">
                     <el-date-picker
-                        v-model="addClsData.openTime"
+                        v-model="addCrsData.openTime"
                         type="date"
                         value-format="yyyy-MM-dd"
                         placeholder="请选择开课时间">
@@ -189,22 +174,22 @@
                     label-position="left"
                     :label-width="formLabelWidth">
                     <el-date-picker
-                        v-model="addClsData.closeTime"
+                        v-model="addCrsData.closeTime"
                         type="date"
                         value-format="yyyy-MM-dd"
                         placeholder="请选择结课时间">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item
-                    label="班主任"
-                    prop="teacher"
+                    label="上课教室"
+                    prop="classId"
                     label-position="left"
                     :label-width="formLabelWidth">
                     <el-select
-                        v-model="addClsData.teacher"
+                        v-model="addCrsData.classId"
                         placeholder="请选择">
                         <el-option
-                            v-for="item in showTeacherData"
+                            v-for="item in showClassIdData"
                             :key="item.id"
                             :label="item.name"
                             :value="item.id">
@@ -213,38 +198,31 @@
                 </el-form-item>
             </el-form>
             <div slot="footer">
-                <el-button @click="closeAddClsForm">取 消</el-button>
+                <el-button @click="closeaddCrsForm">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="addClsDataSubmit"
+                    @click="addCrsDataSubmit"
                     >确 定</el-button
                 >
             </div>
         </el-dialog>
 
-        <!-- 编辑班级按钮的内容 -->
+        <!-- 编辑课程按钮的内容 -->
         <el-dialog
-            title="编辑班级"
-            :visible.sync="editClsDialogVisible">
+            title="编辑课程"
+            :visible.sync="editCrsDialogVisible">
             <el-form
-                :model="editClsData"
-                :rules="clsRules"
-                ref="editClsForm">
+                :model="editCrsData"
+                :rules="crsRules"
+                ref="editCrsForm">
                 <el-form-item
-                    label="班级名称"
+                    label="课程名称"
                     prop="name"
                     label-position="left"
                     :label-width="formLabelWidth">
                     <el-input
-                        v-model="editClsData.name"
-                        placeholder="请输入班级名称,如:2024第01期10班"></el-input>
-                </el-form-item>
-                <el-form-item
-                    label="班级教室"
-                    prop="room"
-                    label-position="left"
-                    :label-width="formLabelWidth">
-                    <el-input v-model="editClsData.room"> </el-input>
+                        v-model="editCrsData.name"
+                        placeholder="请输入课程名称,如:2024第01期10班"></el-input>
                 </el-form-item>
                 <el-form-item
                     label="开课时间"
@@ -252,7 +230,7 @@
                     label-position="left"
                     :label-width="formLabelWidth">
                     <el-date-picker
-                        v-model="editClsData.openTime"
+                        v-model="editCrsData.openTime"
                         type="date"
                         value-format="yyyy-MM-dd">
                     </el-date-picker>
@@ -263,19 +241,19 @@
                     label-position="left"
                     :label-width="formLabelWidth">
                     <el-date-picker
-                        v-model="editClsData.closeTime"
+                        v-model="editCrsData.closeTime"
                         type="date"
                         value-format="yyyy-MM-dd">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item
-                    label="班主任"
-                    prop="teacher"
+                    label="上课教室"
+                    prop="classId"
                     label-position="left"
                     :label-width="formLabelWidth">
-                    <el-select v-model="editClsData.teacher">
+                    <el-select v-model="editCrsData.classId">
                         <el-option
-                            v-for="item in showTeacherData"
+                            v-for="item in showClassIdData"
                             :key="item.id"
                             :label="item.name"
                             :value="item.id">
@@ -284,27 +262,27 @@
                 </el-form-item>
             </el-form>
             <div slot="footer">
-                <el-button @click="editClsDialogVisible = false">取 消</el-button>
+                <el-button @click="editCrsDialogVisible = false">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="editClsDataSubmit"
+                    @click="editCrsDataSubmit"
                     >确 定</el-button
                 >
             </div>
         </el-dialog>
 
-        <!-- 删除班级按钮的内容 -->
+        <!-- 删除课程按钮的内容 -->
         <el-dialog
-            title="删除班级"
-            :visible.sync="delClsDialogVisible">
-            <span>您确定要删除该班级吗？</span>
+            title="删除课程"
+            :visible.sync="delCrsDialogVisible">
+            <span>您确定要删除该课程吗？</span>
             <span
                 slot="footer"
                 class="dialog-footer">
-                <el-button @click="delClsDialogVisible = false">取 消</el-button>
+                <el-button @click="delCrsDialogVisible = false">取 消</el-button>
                 <el-button
                     type="danger"
-                    @click="delClsDataSubmit"
+                    @click="delCrsDataSubmit"
                     >确 定</el-button
                 >
             </span>
@@ -321,9 +299,9 @@ export default {
     data() {
         return {
             // 对话框控制区
-            addClsDialogVisible: false,
-            editClsDialogVisible: false,
-            delClsDialogVisible: false,
+            addCrsDialogVisible: false,
+            editCrsDialogVisible: false,
+            delCrsDialogVisible: false,
 
             // 表单控制区
             formLabelWidth: "100px",
@@ -334,29 +312,15 @@ export default {
             totalPage: -1, //
 
             // 表单验证规则
-            clsRules: {
+            crsRules: {
                 name: [
-                    { required: true, message: "请输入班级名称", trigger: "blur" },
+                    { required: true, message: "请输入课程名称", trigger: "blur" },
                     { min: 4, max: 30, message: "长度在 4 到 30 个字符", trigger: "blur" },
                     {
                         validator: (rule, value, callback) => {
                             const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+$/;
                             if (!reg.test(value)) {
-                                callback(new Error("班级名称只能包含汉字、数字和字母"));
-                            } else {
-                                callback();
-                            }
-                        },
-                        trigger: "blur",
-                    },
-                ],
-                room: [
-                    { min: 1, max: 20, message: "长度在 1 到 20 个字符", trigger: "blur" },
-                    {
-                        validator: (rule, value, callback) => {
-                            const reg = /^[A-Za-z0-9\u4e00-\u9fa5]+$/;
-                            if (!reg.test(value)) {
-                                callback(new Error("班级教室只能包含汉字、数字和字母"));
+                                callback(new Error("课程名称只能包含汉字、数字和字母"));
                             } else {
                                 callback();
                             }
@@ -366,36 +330,35 @@ export default {
                 ],
                 openTime: [{ required: true, message: "请选择开课时间", trigger: "change" }],
                 closeTime: [{ required: true, message: "请选择结课时间", trigger: "change" }],
-                teacher: [{ required: true, message: "请选择", trigger: "change" }],
+                classId: [{ required: true, message: "请选择", trigger: "change" }],
             },
 
-            // 查询班级区数据
-            clsSearchData: {
+            // 查询课程区数据
+            crsSearchData: {
                 name: "",
                 closeTime: ["", ""],
             },
 
-            // 增加班级区数据
-            addClsData: {},
+            // 增加课程区数据
+            addCrsData: {},
 
-            // 编辑班级区数据
-            editClsData: {
+            // 编辑课程区数据
+            editCrsData: {
                 id: "",
                 name: "",
-                room: "",
                 openTime: "",
                 closeTime: "",
-                teacher: "",
+                classId: "",
             },
 
-            // 删除班级区数据
-            delClsDataId: -1,
+            // 删除课程区数据
+            delCrsDataId: -1,
 
-            // 显示班级区数据
-            showClsData: [],
+            // 显示课程区数据
+            showCrsData: [],
 
-            // 显示班主任区数据
-            showTeacherData: [],
+            // 显示教室区数据
+            showClassIdData: [],
         };
     },
     methods: {
@@ -403,123 +366,123 @@ export default {
         handleSizeChange(val) {
             this.pageSize = val;
             this.currentPage = 1;
-            this.loadClsData();
+            this.loadCrsData();
         },
         handleCurrentChange(val) {
             this.currentPage = val;
-            this.loadClsData();
+            this.loadCrsData();
         },
 
         // 表格控制区方法
         // 根据班主任id获取班主任名称
-        teacherNameFormatter(row) {
-            let teacherItem = this.showTeacherData.find((item) => item.id === row.teacher);
-            return teacherItem ? teacherItem.name : "未知";
+        classIdNameFormatter(row) {
+            let classItem = this.showClassIdData.find((item) => item.id === row.classId);
+            return classItem ? classItem.name : "未知";
         },
 
-        // 查询班级区方法
-        searchCls() {
+        // 查询课程区方法
+        searchCrs() {
             let beginDate = "";
             let endDate = "";
-            if (this.clsSearchData.closeTime != null) {
-                beginDate = this.clsSearchData.closeTime[0];
-                endDate = this.clsSearchData.closeTime[1];
+            if (this.crsSearchData.closeTime != null) {
+                beginDate = this.crsSearchData.closeTime[0];
+                endDate = this.crsSearchData.closeTime[1];
             }
             this.currentPage = 1; // 重置当前页数
-            axios.get(`${serverURL}/clss?name=${this.clsSearchData.name}&begin=${beginDate}&end=${endDate}&currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
-                this.showClsData = response.data.data.rows;
+            axios.get(`${serverURL}/crss?name=${this.crsSearchData.name}&begin=${beginDate}&end=${endDate}&currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
+                this.showCrsData = response.data.data.rows;
                 this.totalPage = response.data.data.total;
             });
         },
 
-        // 增加班级区方法
-        addClsDataSubmit() {
-            this.$refs.addClsForm.validate((valid) => {
+        // 增加课程区方法
+        addCrsDataSubmit() {
+            this.$refs.addCrsForm.validate((valid) => {
                 if (!valid) {
                     return false;
                 } else {
                     //发送数据到数据库
-                    axios.post(`${serverURL}/clss`, this.addClsData).then((response) => {
+                    axios.post(`${serverURL}/crss`, this.addCrsData).then((response) => {
                         showMessage(response, this, () => {
-                            this.$refs.addClsForm.resetFields(); //清空表单数据
-                            this.addClsDialogVisible = false;
-                            this.loadClsData();
+                            this.$refs.addCrsForm.resetFields(); //清空表单数据
+                            this.addCrsDialogVisible = false;
+                            this.loadCrsData();
                         });
                     });
                 }
             });
         },
-        closeAddClsForm() {
-            this.$refs.addClsForm.resetFields();
-            this.addClsDialogVisible = false;
+        closeaddCrsForm() {
+            this.$refs.addCrsForm.resetFields();
+            this.addCrsDialogVisible = false;
         },
-        addClsHandleClose(done) {
+        addCrsHandleClose(done) {
             this.$confirm("确认关闭？")
                 .then(() => {
-                    this.$refs.addClsForm.resetFields();
+                    this.$refs.addCrsForm.resetFields();
                     done();
                 })
                 .catch(() => {});
         },
 
-        // 编辑班级区方法
-        showEditClsDialog(id) {
-            axios.get(`${serverURL}/clss/${id}`).then((response) => {
+        // 编辑课程区方法
+        showEditCrsDialog(id) {
+            axios.get(`${serverURL}/crss/${id}`).then((response) => {
                 const data = response.data.data;
-                Object.keys(this.editClsData).forEach((key) => {
+                Object.keys(this.editCrsData).forEach((key) => {
                     if (key in data) {
-                        this.editClsData[key] = data[key];
+                        this.editCrsData[key] = data[key];
                     }
                 });
             });
-            this.editClsDialogVisible = true;
+            this.editCrsDialogVisible = true;
         },
-        editClsDataSubmit() {
-            this.$refs.editClsForm.validate((valid) => {
+        editCrsDataSubmit() {
+            this.$refs.editCrsForm.validate((valid) => {
                 if (!valid) {
                     return false;
                 } else {
                     //发送数据到数据库
-                    axios.put(`${serverURL}/clss`, this.editClsData).then((response) => {
+                    axios.put(`${serverURL}/crss`, this.editCrsData).then((response) => {
                         showMessage(response, this, () => {
-                            this.$refs.editClsForm.resetFields(); //清空表单数据
-                            this.editClsDialogVisible = false;
-                            this.loadClsData();
+                            this.$refs.editCrsForm.resetFields(); //清空表单数据
+                            this.editCrsDialogVisible = false;
+                            this.loadCrsData();
                         });
                     });
                 }
             });
         },
 
-        // 删除班级区方法
-        showDelClsDialog(id) {
-            this.delClsDataId = id;
-            this.delClsDialogVisible = true;
+        // 删除课程区方法
+        showDelCrsDialog(id) {
+            this.delCrsDataId = id;
+            this.delCrsDialogVisible = true;
         },
-        delClsDataSubmit() {
+        delCrsDataSubmit() {
             // 向数据库中删除数据
-            axios.delete(`${serverURL}/clss/${this.delClsDataId}`).then((response) => {
+            axios.delete(`${serverURL}/crss/${this.delCrsDataId}`).then((response) => {
                 showMessage(response, this, () => {
-                    this.loadClsData();
+                    this.loadCrsData();
                 });
             });
             // 关闭删除对话框
-            this.delClsDialogVisible = false;
+            this.delCrsDialogVisible = false;
         },
 
-        // 显示班级区方法
-        loadClsData() {
+        // 显示课程区方法
+        loadCrsData() {
             // 根据当前页数和每页显示条目数获取数据,无条件查询
-            axios.get(`${serverURL}/clss?currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
-                this.showClsData = response.data.data.rows;
+            axios.get(`${serverURL}/crss?currentPage=${this.currentPage}&pageSize=${this.pageSize}`).then((response) => {
+                this.showCrsData = response.data.data.rows;
                 this.totalPage = response.data.data.total;
             });
         },
     },
     mounted() {
-        this.loadClsData();
-        axios.get(`${serverURL}/emps?currentPage=1&pageSize=9999`).then((response) => {
-            this.showTeacherData = response.data.data.rows;
+        this.loadCrsData();
+        axios.get(`${serverURL}/clss?currentPage=1&pageSize=9999`).then((response) => {
+            this.showClassIdData = response.data.data.rows;
         });
     },
 };

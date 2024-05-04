@@ -579,9 +579,7 @@ export default {
             showStuData: [],
 
             // 显示班级区数据
-            showClsData: [], // 用于存储班级数据
-            classNames: {}, // 用于存储班级 ID 和名称的映射
-            loadingClassNames: {}, // 用于跟踪哪些班级 ID 的请求正在进行
+            showClsData: [],
         };
     },
     methods: {
@@ -599,21 +597,8 @@ export default {
         // 表格控制区方法
         // 根据班级id获取班级名称
         classNameFormatter(row) {
-            if (this.classNames[row.classId]) {
-                return this.classNames[row.classId];
-            } else {
-                this.loadClassName(row.classId);
-                return "加载中...";
-            }
-        },
-        loadClassName(classId) {
-            if (!this.loadingClassNames[classId]) {
-                this.loadingClassNames[classId] = true;
-                axios.get(`${serverURL}/clss/${classId}`).then((response) => {
-                    this.$set(this.classNames, classId, response.data.data.name);
-                    this.loadingClassNames[classId] = false;
-                });
-            }
+            let classItem = this.showClsData.find((item) => item.id === row.classId);
+            return classItem ? classItem.name : "未知";
         },
         handleSelectionChange(val) {
             this.multiDelTable = val;

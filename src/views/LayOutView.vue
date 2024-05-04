@@ -27,20 +27,26 @@
                 <el-aside width="200px">
                     <el-menu
                         router
-                        :default-openeds="['1', '2', '3']">
-                        <el-submenu index="1">
+                        :default-openeds="['1', '2', '3', '4']">
+                        <el-submenu index="2">
+                            <template slot="title"><i class="el-icon-message"></i>课程安排管理</template>
+                            <el-menu-item :index="{ name: 'CourseManagement' }"> 课程管理 </el-menu-item>
+                            <el-menu-item :index="{ name: 'ScheduleManagement' }"> 课程安排 </el-menu-item>
+                        </el-submenu>
+                        <el-submenu index="2">
                             <template slot="title"><i class="el-icon-message"></i>班级学员管理</template>
                             <el-menu-item :index="{ name: 'ClassManagement' }"> 班级管理 </el-menu-item>
                             <el-menu-item :index="{ name: 'StudentManagement' }"> 学员管理 </el-menu-item>
                         </el-submenu>
-                        <el-submenu index="2">
+                        <el-submenu index="3">
                             <template slot="title"><i class="el-icon-message"></i>系统信息管理</template>
                             <el-menu-item :index="{ name: 'DepartmentManagement' }"> 部门管理 </el-menu-item>
                             <el-menu-item :index="{ name: 'EmployeeManagement' }"> 员工管理 </el-menu-item>
                         </el-submenu>
-                        <el-submenu index="3">
+                        <el-submenu index="4">
                             <template slot="title"><i class="el-icon-message"></i>数据统计管理</template>
                             <el-menu-item :index="{ name: 'EmployeeInformationStatistics' }"> 员工信息统计 </el-menu-item>
+                            <el-menu-item :index="{ name: 'StudentInformationStatistics' }"> 学员信息统计 </el-menu-item>
                         </el-submenu>
                     </el-menu>
                 </el-aside>
