@@ -20,14 +20,14 @@ const routes = [
     // 主界面
     {
         path: "/main",
-        name: "Main",
         component: () => import("../views/LayOutView.vue"),
+        redirect: { name: "Home" },
         meta: {
             requiresAuth: true,
         },
         children: [
             {
-                path: "/home",
+                path: "home",
                 name: "Home",
                 component: () => import("../views/HomeView.vue"),
                 meta: {
@@ -36,7 +36,7 @@ const routes = [
             },
             // 课程安排管理
             {
-                path: "/crs",
+                path: "crs",
                 name: "CourseManagement",
                 component: () => import("../views/LTT/CourseScheduleManagement/CourseManagementView.vue"),
                 meta: {
@@ -44,7 +44,7 @@ const routes = [
                 },
             },
             {
-                path: "/sch",
+                path: "sch",
                 name: "ScheduleManagement",
                 component: () => import("../views/LTT/CourseScheduleManagement/ScheduleManagementView.vue"),
                 meta: {
@@ -53,7 +53,7 @@ const routes = [
             },
             // 班级学员管理
             {
-                path: "/cls",
+                path: "cls",
                 name: "ClassManagement",
                 component: () => import("../views/LTT/ClassStudentManagement/ClassManagementView.vue"),
                 meta: {
@@ -61,7 +61,7 @@ const routes = [
                 },
             },
             {
-                path: "/stu",
+                path: "stu",
                 name: "StudentManagement",
                 component: () => import("../views/LTT/ClassStudentManagement/StudentManagementView.vue"),
                 meta: {
@@ -70,7 +70,7 @@ const routes = [
             },
             // 系统信息管理
             {
-                path: "/dpt",
+                path: "dpt",
                 name: "DepartmentManagement",
                 component: () => import("../views/LTT/SystemInformationManagement/DepartmentManagementView.vue"),
                 meta: {
@@ -78,7 +78,7 @@ const routes = [
                 },
             },
             {
-                path: "/emp",
+                path: "emp",
                 name: "EmployeeManagement",
                 component: () => import("../views/LTT/SystemInformationManagement/EmployeeManagementView.vue"),
                 meta: {
@@ -87,7 +87,7 @@ const routes = [
             },
             // 数据统计管理
             {
-                path: "/empanal",
+                path: "empanal",
                 name: "EmployeeInformationStatistics",
                 component: () => import("../views/LTT/DataStatisticsManagement/EmployeeInformationStatisticsView.vue"),
                 meta: {
@@ -95,7 +95,7 @@ const routes = [
                 },
             },
             {
-                path: "/stuanal",
+                path: "stuanal",
                 name: "StudentInformationStatistics",
                 component: () => import("../views/LTT/DataStatisticsManagement/StudentInformationStatisticsView.vue"),
                 meta: {
@@ -103,6 +103,10 @@ const routes = [
                 },
             },
         ],
+    },
+    {
+        path: "*",
+        redirect: { name: "Home" },
     },
 ];
 

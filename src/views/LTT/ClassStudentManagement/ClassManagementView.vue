@@ -33,8 +33,8 @@
                     <el-form-item>
                         <el-button
                             type="primary"
-                            @click="searchCls"
-                            >查 询
+                            @click="searchCls">
+                            查 询
                         </el-button>
                     </el-form-item>
                 </el-col>
@@ -44,9 +44,9 @@
         <!-- 新增班级按钮 -->
         <el-button
             type="primary"
-            @click="addClsDialogVisible = true"
-            >+ 新增班级</el-button
-        >
+            @click="addClsDialogVisible = true">
+            + 新增班级
+        </el-button>
 
         <!-- 表格 -->
 
@@ -92,16 +92,16 @@
                     <el-button
                         type="primary"
                         @click="showEditClsDialog(scope.row.id)"
-                        size="mini"
-                        >编 辑</el-button
-                    >
+                        size="mini">
+                        编 辑
+                    </el-button>
                     <!-- 删除班级按钮 -->
                     <el-button
                         type="danger"
                         @click="showDelClsDialog(scope.row.id)"
-                        size="mini"
-                        >删 除</el-button
-                    >
+                        size="mini">
+                        删 除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -159,7 +159,8 @@
                     :label-width="formLabelWidth">
                     <el-input
                         v-model="addClsData.name"
-                        placeholder="请输入班级名称,如:2024第01期10班"></el-input>
+                        placeholder="请输入班级名称,如:2024第01期10班">
+                    </el-input>
                 </el-form-item>
                 <el-form-item
                     label="班级教室"
@@ -216,9 +217,9 @@
                 <el-button @click="closeAddClsForm">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="addClsDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="addClsDataSubmit">
+                    确 定
+                </el-button>
             </div>
         </el-dialog>
 
@@ -237,14 +238,18 @@
                     :label-width="formLabelWidth">
                     <el-input
                         v-model="editClsData.name"
-                        placeholder="请输入班级名称,如:2024第01期10班"></el-input>
+                        placeholder="请输入班级名称,如:2024第01期10班">
+                    </el-input>
                 </el-form-item>
                 <el-form-item
                     label="班级教室"
                     prop="room"
                     label-position="left"
                     :label-width="formLabelWidth">
-                    <el-input v-model="editClsData.room"> </el-input>
+                    <el-input
+                        v-model="editClsData.room"
+                        placeholder="请输入班级教室">
+                    </el-input>
                 </el-form-item>
                 <el-form-item
                     label="开课时间"
@@ -287,9 +292,9 @@
                 <el-button @click="editClsDialogVisible = false">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="editClsDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="editClsDataSubmit">
+                    确 定
+                </el-button>
             </div>
         </el-dialog>
 
@@ -304,9 +309,9 @@
                 <el-button @click="delClsDialogVisible = false">取 消</el-button>
                 <el-button
                     type="danger"
-                    @click="delClsDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="delClsDataSubmit">
+                    确 定
+                </el-button>
             </span>
         </el-dialog>
     </el-main>

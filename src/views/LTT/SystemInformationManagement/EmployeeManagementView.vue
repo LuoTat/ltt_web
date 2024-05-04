@@ -11,7 +11,8 @@
                             v-model="empSearchData.name"
                             clearable
                             placeholder="请输入员工姓名"
-                            style="width: 155px"></el-input>
+                            style="width: 155px">
+                        </el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="5">
@@ -25,7 +26,8 @@
                                 v-for="item in genderOptions"
                                 :key="item.value"
                                 :label="item.label"
-                                :value="item.value"></el-option>
+                                :value="item.value">
+                            </el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -47,9 +49,9 @@
                     <el-form-item>
                         <el-button
                             type="primary"
-                            @click="searchEmp"
-                            >查 询</el-button
-                        >
+                            @click="searchEmp">
+                            查 询
+                        </el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -59,15 +61,15 @@
         <div style="margin-top: 10px">
             <el-button
                 type="primary"
-                @click="addEmpDialogVisible = true"
-                >+ 新增员工</el-button
-            >
+                @click="addEmpDialogVisible = true">
+                + 新增员工
+            </el-button>
             <el-button
                 type="primary"
                 @click="multDelEmpDialogVisible = true"
-                :disabled="this.multiDelTable.length === 0"
-                >- 批量删除</el-button
-            >
+                :disabled="this.multiDelTable.length === 0">
+                - 批量删除
+            </el-button>
         </div>
 
         <!-- 表格 -->
@@ -122,16 +124,16 @@
                     <el-button
                         type="primary"
                         @click="showEditEmpDialog(scope.row.id)"
-                        size="mini"
-                        >编 辑</el-button
-                    >
+                        size="mini">
+                        编 辑
+                    </el-button>
                     <!-- 删除员工按钮 -->
                     <el-button
                         type="danger"
                         @click="showDelEmpDialog(scope.row.id)"
-                        size="mini"
-                        >删 除</el-button
-                    >
+                        size="mini">
+                        删 除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -189,7 +191,8 @@
                     :label-width="formLabelWidth">
                     <el-input
                         v-model="addEmpData.username"
-                        placeholder="请输入用户名，2-20字符，不可重复"></el-input>
+                        placeholder="请输入用户名，2-20字符，不可重复">
+                    </el-input>
                 </el-form-item>
                 <el-form-item
                     label="员工姓名"
@@ -213,7 +216,8 @@
                             v-for="item in genderOptions"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value"></el-option>
+                            :value="item.value">
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item
@@ -222,19 +226,24 @@
                     label-job="left"
                     :label-width="formLabelWidth">
                     <el-upload
+                        ref="uploadImage"
                         class="avatar-uploader"
                         :action="uploadURL"
-                        name="image"
+                        :auto-upload="false"
+                        :headers="{ Authorization: jwtToken }"
                         :show-file-list="false"
+                        :before-upload="beforeAvatarUpload"
+                        :on-change="handleImageUpload"
                         :on-success="addEmpHandleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload">
+                        name="image">
                         <img
-                            v-if="addEmpData.image"
-                            :src="addEmpData.image"
+                            v-if="imageTempURL"
+                            :src="imageTempURL"
                             class="avatar" />
                         <i
                             v-else
-                            class="el-icon-plus avatar-uploader-icon"></i>
+                            class="el-icon-plus avatar-uploader-icon">
+                        </i>
                     </el-upload>
                 </el-form-item>
                 <el-form-item
@@ -249,7 +258,8 @@
                             v-for="item in jobOptions"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value"></el-option>
+                            :value="item.value">
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item
@@ -276,7 +286,8 @@
                             v-for="item in showDptData"
                             :key="item.id"
                             :label="item.name"
-                            :value="item.id"></el-option>
+                            :value="item.id">
+                        </el-option>
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -284,9 +295,9 @@
                 <el-button @click="closeAddEmpForm">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="addEmpDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="addEmpDataSubmit">
+                    确 定
+                </el-button>
             </div>
         </el-dialog>
 
@@ -305,7 +316,8 @@
                     :label-width="formLabelWidth">
                     <el-input
                         v-model="editEmpData.username"
-                        placeholder="请输入用户名，2-20字符，不可重复"></el-input>
+                        placeholder="请输入用户名，2-20字符，不可重复">
+                    </el-input>
                 </el-form-item>
                 <el-form-item
                     label="员工姓名"
@@ -329,7 +341,8 @@
                             v-for="item in genderOptions"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value"></el-option>
+                            :value="item.value">
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item
@@ -338,19 +351,23 @@
                     label-job="left"
                     :label-width="formLabelWidth">
                     <el-upload
+                        ref="uploadImage"
                         class="avatar-uploader"
                         :action="uploadURL"
-                        name="image"
+                        :headers="{ Authorization: jwtToken }"
                         :show-file-list="false"
+                        :before-upload="beforeAvatarUpload"
+                        :on-change="handleImageUpload"
                         :on-success="editEmpHandleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload">
+                        name="image">
                         <img
-                            v-if="editEmpData.image"
-                            :src="editEmpData.image"
+                            v-if="imageTempURL"
+                            :src="imageTempURL"
                             class="avatar" />
                         <i
                             v-else
-                            class="el-icon-plus avatar-uploader-icon"></i>
+                            class="el-icon-plus avatar-uploader-icon">
+                        </i>
                     </el-upload>
                 </el-form-item>
                 <el-form-item
@@ -365,7 +382,8 @@
                             v-for="item in jobOptions"
                             :key="item.value"
                             :label="item.label"
-                            :value="item.value"></el-option>
+                            :value="item.value">
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item
@@ -392,7 +410,8 @@
                             v-for="item in showDptData"
                             :key="item.id"
                             :label="item.name"
-                            :value="item.id"></el-option>
+                            :value="item.id">
+                        </el-option>
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -400,9 +419,9 @@
                 <el-button @click="editEmpDialogVisible = false">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="editEmpDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="editEmpDataSubmit">
+                    确 定
+                </el-button>
             </div>
         </el-dialog>
 
@@ -416,9 +435,9 @@
                 <el-button @click="multDelEmpDialogVisible = false">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="multDelEmpDataSubmit()"
-                    >确 定</el-button
-                >
+                    @click="multDelEmpDataSubmit()">
+                    确 定
+                </el-button>
             </span>
         </el-dialog>
 
@@ -432,9 +451,9 @@
                 <el-button @click="delEmpDialogVisible = false">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="delEmpDataSubmit"
-                    >删除</el-button
-                >
+                    @click="delEmpDataSubmit">
+                    删除
+                </el-button>
             </span>
         </el-dialog>
     </el-main>
@@ -450,6 +469,10 @@ import { showMessage } from "../../../Utils/showMessage.js";
 export default {
     data() {
         return {
+            // 图像缓存地址
+            imageTempURL: "",
+            // jwtToken
+            jwtToken: sessionStorage.getItem("jwtToken"),
             // 上传图片地址
             uploadURL: `${serverURL}/upload`,
 
@@ -555,9 +578,14 @@ export default {
             this.loadEmpData();
         },
 
+        // 图片预处理区方法
+        handleImageUpload(file) {
+            this.imageTempURL = URL.createObjectURL(file.raw);
+        },
+
         // 图像上传区方法
         beforeAvatarUpload(file) {
-            const isJPG = file.type === "image/jpeg";
+            const isJPG = file.type === "image/jpg";
             const isPNG = file.type === "image/png";
             const isJPEG = file.type === "image/jpeg";
             const isLt2M = file.size / 1024 / 1024 < 2;
@@ -567,7 +595,7 @@ export default {
             if (!isLt2M) {
                 this.$message.error("上传头像图片大小不能超过 2MB!");
             }
-            return isJPG && isLt2M;
+            return (isJPG || isPNG || isJPEG) && isLt2M;
         },
 
         // 表格控制区方法
@@ -592,22 +620,23 @@ export default {
 
         // 增加员工区方法
         addEmpHandleAvatarSuccess(response) {
+            // 图片上传成功后，将图片地址赋值给addEmpData.image
             this.addEmpData.image = response.data;
-            console.log(this.addEmpData);
+            // 发送数据到数据库
+            axios.post(`${serverURL}/emps`, this.addEmpData).then((response) => {
+                showMessage(response, this, () => {
+                    this.$refs.addEmpForm.resetFields(); //清空表单数据
+                    this.addEmpDialogVisible = false;
+                    this.loadEmpData();
+                });
+            });
         },
         addEmpDataSubmit() {
             this.$refs.addEmpForm.validate((valid) => {
                 if (!valid) {
                     return false;
                 } else {
-                    //发送数据到数据库
-                    axios.post(`${serverURL}/emps`, this.addEmpData).then((response) => {
-                        showMessage(response, this, () => {
-                            this.$refs.addEmpForm.resetFields(); //清空表单数据
-                            this.addEmpDialogVisible = false;
-                            this.loadEmpData();
-                        });
-                    });
+                    this.$refs.uploadImage.submit();
                 }
             });
         },
@@ -626,7 +655,16 @@ export default {
 
         // 编辑员工区方法
         editEmpHandleAvatarSuccess(response) {
+            // 图片上传成功后，将图片地址赋值给editEmpData.image
             this.editEmpData.image = response.data;
+            // 发送数据到数据库
+            axios.put(`${serverURL}/emps`, this.editEmpData).then((response) => {
+                showMessage(response, this, () => {
+                    this.$refs.editEmpForm.resetFields(); //清空表单数据
+                    this.editEmpDialogVisible = false;
+                    this.loadEmpData();
+                });
+            });
         },
         showEditEmpDialog(id) {
             axios.get(`${serverURL}/emps/${id}`).then((response) => {
@@ -644,14 +682,7 @@ export default {
                 if (!valid) {
                     return false;
                 } else {
-                    //发送数据到数据库
-                    axios.put(`${serverURL}/emps`, this.editEmpData).then((response) => {
-                        showMessage(response, this, () => {
-                            this.$refs.editEmpForm.resetFields(); //清空表单数据
-                            this.editEmpDialogVisible = false;
-                            this.loadEmpData();
-                        });
-                    });
+                    this.$refs.uploadImage.submit();
                 }
             });
         },

@@ -63,9 +63,9 @@
                     <el-form-item>
                         <el-button
                             type="primary"
-                            @click="searchStu"
-                            >查 询</el-button
-                        >
+                            @click="searchStu">
+                            查 询
+                        </el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -75,15 +75,15 @@
         <div style="margin-top: 10px">
             <el-button
                 type="primary"
-                @click="addStuDialogVisible = true"
-                >+ 新增学员</el-button
-            >
+                @click="addStuDialogVisible = true">
+                + 新增学员
+            </el-button>
             <el-button
                 type="primary"
                 @click="multdelStuDialogVisible = true"
-                :disabled="this.multiDelTable.length === 0"
-                >- 批量删除</el-button
-            >
+                :disabled="this.multiDelTable.length === 0">
+                - 批量删除
+            </el-button>
         </div>
 
         <!-- 表格 -->
@@ -155,23 +155,23 @@
                     <el-button
                         type="primary"
                         @click="showEditStuDialog(scope.row.id)"
-                        size="mini"
-                        >编 辑</el-button
-                    >
+                        size="mini">
+                        编 辑
+                    </el-button>
                     <!-- 违纪按钮 -->
                     <el-button
                         type="primary"
                         @click="showEditStuInfractionDialog(scope.row.id)"
-                        size="mini"
-                        >违 纪</el-button
-                    >
+                        size="mini">
+                        违 纪
+                    </el-button>
                     <!-- 删除学员按钮 -->
                     <el-button
                         type="danger"
                         @click="showDelStuDialog(scope.row.id)"
-                        size="mini"
-                        >删 除</el-button
-                    >
+                        size="mini">
+                        删 除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -229,7 +229,8 @@
                     :label-width="formLabelWidth">
                     <el-input
                         v-model="addStuData.name"
-                        placeholder="请输入姓名"></el-input>
+                        placeholder="请输入姓名">
+                    </el-input>
                 </el-form-item>
                 <el-form-item
                     label="学号"
@@ -305,9 +306,9 @@
                 <el-button @click="closeAddStuForm">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="addStuDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="addStuDataSubmit">
+                    确 定
+                </el-button>
             </div>
         </el-dialog>
 
@@ -326,7 +327,8 @@
                     :label-width="formLabelWidth">
                     <el-input
                         v-model="editStuData.name"
-                        placeholder="请输入姓名"></el-input>
+                        placeholder="请输入姓名">
+                    </el-input>
                 </el-form-item>
                 <el-form-item
                     label="学号"
@@ -359,7 +361,8 @@
                     :label-width="formLabelWidth">
                     <el-input
                         v-model="editStuData.phoneNumber"
-                        placeholder="请输入手机号"></el-input>
+                        placeholder="请输入手机号">
+                    </el-input>
                 </el-form-item>
                 <el-form-item
                     label="最高学历"
@@ -394,9 +397,9 @@
                 <el-button @click="editStuDialogVisible = false">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="editStuDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="editStuDataSubmit">
+                    确 定
+                </el-button>
             </div>
         </el-dialog>
 
@@ -415,16 +418,17 @@
                     :label-width="formLabelWidth">
                     <el-input
                         v-model="editStuInfractionData.infractionPoint"
-                        placeholder="请输入扣分数目"></el-input>
+                        placeholder="请输入扣分数目">
+                    </el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer">
-                <el-button @click="editStuInfractionDialogVisible = false">取 消</el-button>
+                <el-button @click="editStuInfractionDialogVisible = false"> 取 消 </el-button>
                 <el-button
                     type="primary"
-                    @click="editStuInfractionDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="editStuInfractionDataSubmit">
+                    确 定
+                </el-button>
             </div>
         </el-dialog>
 
@@ -438,9 +442,9 @@
                 <el-button @click="multdelStuDialogVisible = false">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="multDelStuDataSubmit()"
-                    >确 定</el-button
-                >
+                    @click="multDelStuDataSubmit()">
+                    确 定
+                </el-button>
             </span>
         </el-dialog>
 
@@ -448,16 +452,15 @@
         <el-dialog
             title="删除学员"
             :visible.sync="delStuDialogVisible"
-            width="30%"
-            :before-close="handleClose">
+            width="30%">
             <span>您确定要删除该学员吗？</span>
             <span slot="footer">
                 <el-button @click="delStuDialogVisible = false">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="delStuDataSubmit()"
-                    >确 定</el-button
-                >
+                    @click="delStuDataSubmit()">
+                    确 定
+                </el-button>
             </span>
         </el-dialog>
     </el-main>

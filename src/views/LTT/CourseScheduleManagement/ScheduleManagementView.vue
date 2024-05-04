@@ -41,8 +41,8 @@
                     <el-form-item>
                         <el-button
                             type="primary"
-                            @click="searchSch"
-                            >查 询
+                            @click="searchSch">
+                            查 询
                         </el-button>
                     </el-form-item>
                 </el-col>
@@ -52,9 +52,9 @@
         <!-- 新增课表按钮 -->
         <el-button
             type="primary"
-            @click="addSchDialogVisible = true"
-            >+ 新增课表</el-button
-        >
+            @click="addSchDialogVisible = true">
+            + 新增课表
+        </el-button>
 
         <!-- 表格 -->
 
@@ -86,16 +86,16 @@
                     <el-button
                         type="primary"
                         @click="showEditSchDialog(scope.row.id)"
-                        size="mini"
-                        >编 辑</el-button
-                    >
+                        size="mini">
+                        编 辑
+                    </el-button>
                     <!-- 删除课表按钮 -->
                     <el-button
                         type="danger"
                         @click="showDelSchDialog(scope.row.id)"
-                        size="mini"
-                        >删 除</el-button
-                    >
+                        size="mini">
+                        删 除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -183,9 +183,9 @@
                 <el-button @click="closeaddSchForm">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="addSchDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="addSchDataSubmit">
+                    确 定
+                </el-button>
             </div>
         </el-dialog>
 
@@ -234,9 +234,9 @@
                 <el-button @click="editSchDialogVisible = false">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="editSchDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="editSchDataSubmit">
+                    确 定
+                </el-button>
             </div>
         </el-dialog>
 
@@ -251,9 +251,9 @@
                 <el-button @click="delSchDialogVisible = false">取 消</el-button>
                 <el-button
                     type="danger"
-                    @click="delSchDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="delSchDataSubmit">
+                    确 定
+                </el-button>
             </span>
         </el-dialog>
     </el-main>
@@ -297,6 +297,7 @@ export default {
 
             // 编辑课表区数据
             editSchData: {
+                id: "",
                 courseId: "",
                 empId: "",
             },

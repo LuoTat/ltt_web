@@ -6,9 +6,9 @@
         <div style="margin-top: 20px">
             <el-button
                 type="primary"
-                @click="addDptDialogVisible = true"
-                >+ 新增部门</el-button
-            >
+                @click="addDptDialogVisible = true">
+                + 新增部门
+            </el-button>
         </div>
 
         <!-- 表格 -->
@@ -38,16 +38,16 @@
                     <el-button
                         type="primary"
                         @click="showEditDptDialog(scope.row.id)"
-                        size="mini"
-                        >编 辑</el-button
-                    >
+                        size="mini">
+                        编 辑
+                    </el-button>
                     <!-- 删除部门按钮 -->
                     <el-button
                         type="danger"
                         @click="showDelDptDialog(scope.row.id)"
-                        size="mini"
-                        >删 除</el-button
-                    >
+                        size="mini">
+                        删 除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -70,16 +70,17 @@
                     :label-width="formLabelWidth">
                     <el-input
                         v-model="addDptData.name"
-                        placeholder="请输入部门名称,长度为2-10位"></el-input>
+                        placeholder="请输入部门名称,长度为2-10位">
+                    </el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer">
                 <el-button @click="closeAddDptForm">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="addDptDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="addDptDataSubmit">
+                    确 定
+                </el-button>
             </div>
         </el-dialog>
 
@@ -98,16 +99,17 @@
                     :label-width="formLabelWidth">
                     <el-input
                         v-model="editDptData.name"
-                        placeholder="请输入部门名称,长度为2-10位"></el-input>
+                        placeholder="请输入部门名称,长度为2-10位">
+                    </el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer">
                 <el-button @click="editDptDialogVisible = false">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="editDptDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="editDptDataSubmit">
+                    确 定
+                </el-button>
             </div>
         </el-dialog>
 
@@ -120,9 +122,9 @@
                 <el-button @click="delDptDialogVisible = false">取 消</el-button>
                 <el-button
                     type="danger"
-                    @click="delDptDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="delDptDataSubmit">
+                    确 定
+                </el-button>
             </span>
         </el-dialog>
     </el-main>

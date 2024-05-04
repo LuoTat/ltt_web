@@ -33,8 +33,8 @@
                     <el-form-item>
                         <el-button
                             type="primary"
-                            @click="searchCrs"
-                            >查 询
+                            @click="searchCrs">
+                            查 询
                         </el-button>
                     </el-form-item>
                 </el-col>
@@ -44,9 +44,9 @@
         <!-- 新增课程按钮 -->
         <el-button
             type="primary"
-            @click="addCrsDialogVisible = true"
-            >+ 新增课程</el-button
-        >
+            @click="addCrsDialogVisible = true">
+            + 新增课程
+        </el-button>
 
         <!-- 表格 -->
 
@@ -87,16 +87,16 @@
                     <el-button
                         type="primary"
                         @click="showEditCrsDialog(scope.row.id)"
-                        size="mini"
-                        >编 辑</el-button
-                    >
+                        size="mini">
+                        编 辑
+                    </el-button>
                     <!-- 删除课程按钮 -->
                     <el-button
                         type="danger"
                         @click="showDelCrsDialog(scope.row.id)"
-                        size="mini"
-                        >删 除</el-button
-                    >
+                        size="mini">
+                        删 除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -154,7 +154,8 @@
                     :label-width="formLabelWidth">
                     <el-input
                         v-model="addCrsData.name"
-                        placeholder="请输入课程名称,如:2024第01期10班"></el-input>
+                        placeholder="请输入课程名称,如:2024第01期10班">
+                    </el-input>
                 </el-form-item>
                 <el-form-item
                     label="开课时间"
@@ -201,9 +202,9 @@
                 <el-button @click="closeaddCrsForm">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="addCrsDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="addCrsDataSubmit">
+                    确 定
+                </el-button>
             </div>
         </el-dialog>
 
@@ -222,7 +223,8 @@
                     :label-width="formLabelWidth">
                     <el-input
                         v-model="editCrsData.name"
-                        placeholder="请输入课程名称,如:2024第01期10班"></el-input>
+                        placeholder="请输入课程名称,如:2024第01期10班">
+                    </el-input>
                 </el-form-item>
                 <el-form-item
                     label="开课时间"
@@ -265,9 +267,9 @@
                 <el-button @click="editCrsDialogVisible = false">取 消</el-button>
                 <el-button
                     type="primary"
-                    @click="editCrsDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="editCrsDataSubmit">
+                    确 定
+                </el-button>
             </div>
         </el-dialog>
 
@@ -282,9 +284,9 @@
                 <el-button @click="delCrsDialogVisible = false">取 消</el-button>
                 <el-button
                     type="danger"
-                    @click="delCrsDataSubmit"
-                    >确 定</el-button
-                >
+                    @click="delCrsDataSubmit">
+                    确 定
+                </el-button>
             </span>
         </el-dialog>
     </el-main>

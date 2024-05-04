@@ -12,13 +12,13 @@
                 </div>
                 <el-button
                     type="primary"
-                    @click="editPasswdDialogVisible = true"
-                    >修改密码
+                    @click="editPasswdDialogVisible = true">
+                    修改密码
                 </el-button>
                 <el-button
                     type="primary"
-                    @click="logOut"
-                    >退出登录
+                    @click="logOut">
+                    退出登录
                 </el-button>
             </el-header>
 
@@ -28,25 +28,25 @@
                     <el-menu
                         router
                         :default-openeds="['1', '2', '3', '4']">
-                        <el-submenu index="2">
-                            <template slot="title"><i class="el-icon-message"></i>课程安排管理</template>
-                            <el-menu-item :index="{ name: 'CourseManagement' }"> 课程管理 </el-menu-item>
-                            <el-menu-item :index="{ name: 'ScheduleManagement' }"> 课程安排 </el-menu-item>
+                        <el-submenu index="1">
+                            <template slot="title"><i class="el-icon-s-order"></i>课程安排管理</template>
+                            <el-menu-item index="crs"> 课程管理 </el-menu-item>
+                            <el-menu-item index="sch"> 课程安排 </el-menu-item>
                         </el-submenu>
                         <el-submenu index="2">
-                            <template slot="title"><i class="el-icon-message"></i>班级学员管理</template>
-                            <el-menu-item :index="{ name: 'ClassManagement' }"> 班级管理 </el-menu-item>
-                            <el-menu-item :index="{ name: 'StudentManagement' }"> 学员管理 </el-menu-item>
+                            <template slot="title"><i class="el-icon-s-promotion"></i>班级学员管理</template>
+                            <el-menu-item index="cls"> 班级管理 </el-menu-item>
+                            <el-menu-item index="stu"> 学员管理 </el-menu-item>
                         </el-submenu>
                         <el-submenu index="3">
-                            <template slot="title"><i class="el-icon-message"></i>系统信息管理</template>
-                            <el-menu-item :index="{ name: 'DepartmentManagement' }"> 部门管理 </el-menu-item>
-                            <el-menu-item :index="{ name: 'EmployeeManagement' }"> 员工管理 </el-menu-item>
+                            <template slot="title"><i class="el-icon-s-custom"></i>系统信息管理</template>
+                            <el-menu-item index="dpt"> 部门管理 </el-menu-item>
+                            <el-menu-item index="emp"> 员工管理 </el-menu-item>
                         </el-submenu>
                         <el-submenu index="4">
-                            <template slot="title"><i class="el-icon-message"></i>数据统计管理</template>
-                            <el-menu-item :index="{ name: 'EmployeeInformationStatistics' }"> 员工信息统计 </el-menu-item>
-                            <el-menu-item :index="{ name: 'StudentInformationStatistics' }"> 学员信息统计 </el-menu-item>
+                            <template slot="title"><i class="el-icon-pie-chart"></i>数据统计管理</template>
+                            <el-menu-item index="empanal"> 员工信息统计 </el-menu-item>
+                            <el-menu-item index="stuanal"> 学员信息统计 </el-menu-item>
                         </el-submenu>
                     </el-menu>
                 </el-aside>
@@ -58,8 +58,7 @@
                     <!-- 修改密码对话框 -->
                     <el-dialog
                         title="修改密码"
-                        :visible.sync="editPasswdDialogVisible"
-                        :before-close="editPasswdHandleClose">
+                        :visible.sync="editPasswdDialogVisible">
                         <el-form
                             :model="editPasswdData"
                             :rules="passwdRules"
@@ -70,6 +69,7 @@
                                 label="旧密码"
                                 prop="oldPasswd">
                                 <el-input
+                                    show-password
                                     type="password"
                                     v-model="editPasswdData.oldPasswd"
                                     autocomplete="off"
@@ -80,6 +80,7 @@
                                 label="新密码"
                                 prop="newPasswd">
                                 <el-input
+                                    show-password
                                     type="password"
                                     v-model="editPasswdData.newPasswd"
                                     autocomplete="off"
@@ -90,6 +91,7 @@
                                 label="确认密码"
                                 prop="confirmPasswd">
                                 <el-input
+                                    show-password
                                     type="password"
                                     v-model="editPasswdData.confirmPasswd"
                                     autocomplete="off"

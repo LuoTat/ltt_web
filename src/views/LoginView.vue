@@ -26,7 +26,8 @@
                             <el-input
                                 v-model="loginEmpData.username"
                                 placeholder="Username"
-                                class="input-login" />
+                                class="input-login">
+                            </el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -42,7 +43,8 @@
                                 type="password"
                                 v-model="loginEmpData.password"
                                 placeholder="Password"
-                                class="input-login" />
+                                class="input-login">
+                            </el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -51,14 +53,14 @@
                     align="right">
                     <el-button
                         type="primary"
-                        @click="resetLoginEmpForm"
-                        >Reset</el-button
-                    >
+                        @click="resetLoginEmpForm">
+                        Reset
+                    </el-button>
                     <el-button
                         type="primary"
-                        @click="LoginEmpSubmit"
-                        >Login</el-button
-                    >
+                        @click="LoginEmpSubmit">
+                        Login
+                    </el-button>
                 </div>
             </el-form>
         </div>
