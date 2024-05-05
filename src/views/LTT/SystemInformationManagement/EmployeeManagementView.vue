@@ -226,7 +226,7 @@
                     label-job="left"
                     :label-width="formLabelWidth">
                     <el-upload
-                        ref="uploadImage"
+                        ref="addEmpUploadImageForm"
                         class="avatar-uploader"
                         :action="uploadURL"
                         :auto-upload="false"
@@ -245,6 +245,17 @@
                             class="el-icon-plus avatar-uploader-icon">
                         </i>
                     </el-upload>
+                </el-form-item>
+                <el-form-item
+                    label-job="left"
+                    label-width="125px">
+                    <el-button
+                        style="margin-left: 10px"
+                        size="small"
+                        type="success"
+                        @click="addEmpUploadImageSubmit">
+                        上传到服务器
+                    </el-button>
                 </el-form-item>
                 <el-form-item
                     label="职位"
@@ -351,9 +362,10 @@
                     label-job="left"
                     :label-width="formLabelWidth">
                     <el-upload
-                        ref="uploadImage"
+                        ref="editEmpUploadImageForm"
                         class="avatar-uploader"
                         :action="uploadURL"
+                        :auto-upload="false"
                         :headers="{ Authorization: jwtToken }"
                         :show-file-list="false"
                         :before-upload="beforeAvatarUpload"
@@ -369,6 +381,17 @@
                             class="el-icon-plus avatar-uploader-icon">
                         </i>
                     </el-upload>
+                </el-form-item>
+                <el-form-item
+                    label-job="left"
+                    label-width="125px">
+                    <el-button
+                        style="margin-left: 10px"
+                        size="small"
+                        type="success"
+                        @click="editEmpUploadImageSubmit">
+                        上传到服务器
+                    </el-button>
                 </el-form-item>
                 <el-form-item
                     label="职位"
@@ -619,24 +642,29 @@ export default {
         },
 
         // 增加员工区方法
+        // 手动上传图片到服务器
+        addEmpUploadImageSubmit() {
+            this.$refs.addEmpUploadImageForm.submit();
+        },
         addEmpHandleAvatarSuccess(response) {
             // 图片上传成功后，将图片地址赋值给addEmpData.image
             this.addEmpData.image = response.data;
-            // 发送数据到数据库
-            axios.post(`${serverURL}/emps`, this.addEmpData).then((response) => {
-                showMessage(response, this, () => {
-                    this.$refs.addEmpForm.resetFields(); //清空表单数据
-                    this.addEmpDialogVisible = false;
-                    this.loadEmpData();
-                });
-            });
         },
         addEmpDataSubmit() {
             this.$refs.addEmpForm.validate((valid) => {
                 if (!valid) {
                     return false;
                 } else {
-                    this.$refs.uploadImage.submit();
+                    // 发送数据到数据库
+                    axios.post(`${serverURL}/emps`, this.addEmpData).then((response) => {
+                        showMessage(response, this, () => {
+                            this.$refs.addEmpForm.resetFields(); //清空表单数据
+                            URL.revokeObjectURL(this.imageTempURL); //释放URL对象
+                            this.imageTempURL = null;
+                            this.addEmpDialogVisible = false;
+                            this.loadEmpData();
+                        });
+                    });
                 }
             });
         },
@@ -654,17 +682,13 @@ export default {
         },
 
         // 编辑员工区方法
+        // 手动上传图片到服务器
+        editEmpUploadImageSubmit() {
+            this.$refs.editEmpUploadImageForm.submit();
+        },
         editEmpHandleAvatarSuccess(response) {
             // 图片上传成功后，将图片地址赋值给editEmpData.image
             this.editEmpData.image = response.data;
-            // 发送数据到数据库
-            axios.put(`${serverURL}/emps`, this.editEmpData).then((response) => {
-                showMessage(response, this, () => {
-                    this.$refs.editEmpForm.resetFields(); //清空表单数据
-                    this.editEmpDialogVisible = false;
-                    this.loadEmpData();
-                });
-            });
         },
         showEditEmpDialog(id) {
             axios.get(`${serverURL}/emps/${id}`).then((response) => {
@@ -674,15 +698,25 @@ export default {
                         this.editEmpData[key] = data[key];
                     }
                 });
+                this.imageTempURL = this.editEmpData.image;
+                this.editEmpDialogVisible = true;
             });
-            this.editEmpDialogVisible = true;
         },
         editEmpDataSubmit() {
             this.$refs.editEmpForm.validate((valid) => {
                 if (!valid) {
                     return false;
                 } else {
-                    this.$refs.uploadImage.submit();
+                    // 发送数据到数据库
+                    axios.put(`${serverURL}/emps`, this.editEmpData).then((response) => {
+                        showMessage(response, this, () => {
+                            this.$refs.editEmpForm.resetFields(); //清空表单数据
+                            URL.revokeObjectURL(this.imageTempURL); //释放URL对象
+                            this.imageTempURL = null;
+                            this.editEmpDialogVisible = false;
+                            this.loadEmpData();
+                        });
+                    });
                 }
             });
         },
