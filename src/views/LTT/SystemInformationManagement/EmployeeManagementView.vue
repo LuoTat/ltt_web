@@ -315,7 +315,8 @@
         <!-- 编辑员工按钮的内容 -->
         <el-dialog
             title="编辑员工"
-            :visible.sync="editEmpDialogVisible">
+            :visible.sync="editEmpDialogVisible"
+            :before-close="editEmpHandleClose">
             <el-form
                 :model="editEmpData"
                 :rules="empRules"
@@ -439,7 +440,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer">
-                <el-button @click="editEmpDialogVisible = false">取 消</el-button>
+                <el-button @click="closeEditEmpForm">取 消</el-button>
                 <el-button
                     type="primary"
                     @click="editEmpDataSubmit">
@@ -660,7 +661,7 @@ export default {
                         showMessage(response, this, () => {
                             this.$refs.addEmpForm.resetFields(); //清空表单数据
                             URL.revokeObjectURL(this.imageTempURL); //释放URL对象
-                            this.imageTempURL = null;
+                            this.imageTempURL = "";
                             this.addEmpDialogVisible = false;
                             this.loadEmpData();
                         });
@@ -670,12 +671,16 @@ export default {
         },
         closeAddEmpForm() {
             this.$refs.addEmpForm.resetFields();
+            URL.revokeObjectURL(this.imageTempURL); //释放URL对象
+            this.imageTempURL = "";
             this.addEmpDialogVisible = false;
         },
         addEmpHandleClose(done) {
             this.$confirm("确认关闭？")
                 .then(() => {
                     this.$refs.addEmpForm.resetFields();
+                    URL.revokeObjectURL(this.imageTempURL); //释放URL对象
+                    this.imageTempURL = "";
                     done();
                 })
                 .catch(() => {});
@@ -719,6 +724,18 @@ export default {
                     });
                 }
             });
+        },
+        closeEditEmpForm() {
+            this.$refs.editEmpForm.resetFields();
+            URL.revokeObjectURL(this.imageTempURL); //释放URL对象
+            this.imageTempURL = "";
+            this.editEmpDialogVisible = false;
+        },
+        editEmpHandleClose(done) {
+            this.$refs.editEmpForm.resetFields();
+            URL.revokeObjectURL(this.imageTempURL); //释放URL对象
+            this.imageTempURL = "";
+            done();
         },
 
         // 删除员工区方法
