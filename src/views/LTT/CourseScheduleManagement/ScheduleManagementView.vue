@@ -147,7 +147,7 @@
                 :rules="schRules"
                 ref="addSchForm">
                 <el-form-item
-                    label="课表名称"
+                    label="课程名称"
                     prop="courseId"
                     label-position="left"
                     :label-width="formLabelWidth">
@@ -198,7 +198,7 @@
                 :rules="schRules"
                 ref="editSchForm">
                 <el-form-item
-                    label="课表名称"
+                    label="课程名称"
                     prop="courseId"
                     label-position="left"
                     :label-width="formLabelWidth">
